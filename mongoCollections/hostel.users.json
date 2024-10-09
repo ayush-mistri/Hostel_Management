@@ -1,0 +1,24 @@
+[{
+  "_id": {
+    "$oid": "645b965902723b061fab22a0"
+  },
+  "email": "ayushmistri0203@gmail.com",
+  "password": "$2a$10$o7kxmuInXN3xMyabWNfMouQ/0/8kuAhQRRiRTW.tl./1MfxwGyRyu",
+  "isAdmin": true,
+  "date": {
+    "$date": "2023-05-10T13:04:25.162Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66a76d905d5a83c238550120"
+  },
+  "email": "krishmavani3011@gmail.com",
+  "password": "$2a$10$o7kxmuInXN3xMyabWNfMouQ/0/8kuAhQRRiRTW.tl./1MfxwGyRyu",
+  "isAdmin": true,
+  "date": {
+    "$date": "2023-05-10T13:04:25.162Z"
+  },
+  "__v": 0
+}]

@@ -7,19 +7,26 @@ function Contact() {
   const [message, setMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
+  const [buttonColor, setButtonColor] = useState('bg-blue-500 hover:bg-blue-700');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSending(true);
 
-    emailjs.send('service_0efzx8m', 'template_3ref3vd', {
+    emailjs.send('service_zd8j699', 'template_h47lvfd', {
       email,
       subject,
       message,
-    }, 'Tew9A-B-c5W2S7CYH')
+    }, 'qKgzsdh_j7Y3WDoxz')
       .then(() => {
         setIsSending(false);
         setIsSent(true);
+        setButtonColor('bg-green-500 hover:bg-green-700'); // Change button color to green
+
+        // Reload page after 3 seconds
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
       })
       .catch((error) => {
         console.error('Error sending email:', error);
@@ -42,7 +49,7 @@ function Contact() {
     <section className="bg-white dark:bg-primary">
       <div className="py-8 lg:py-16 px-4 mx-auto max-w-screen-md">
         <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white">Contact Us</h2>
-        <p className="mb-8 lg:mb-16 font-light text-center text-gray-500 dark:text-white sm:text-xl">If you are facing any problem or if you have any querie, Let us know.</p>
+        <p className="mb-8 lg:mb-16 font-light text-center text-gray-500 dark:text-white sm:text-xl">If you are facing any problem or if you have any queries, let us know.</p>
         <form onSubmit={handleSubmit} className="space-y-8">
           <div>
             <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Your email</label>
@@ -84,7 +91,7 @@ function Contact() {
           </div>
           <button
             type="submit"
-            className="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-blue-500 sm:w-fit hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+            className={`py-3 px-5 text-sm font-medium text-center text-white rounded-lg ${buttonColor} sm:w-fit focus:ring-4 focus:outline-none focus:ring-primary-300 dark:focus:ring-primary-800`}
             disabled={isSending || isSent}
           >
             {isSending ? 'Sending...' : isSent ? 'Sent!' : 'Send message'}

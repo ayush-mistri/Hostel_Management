@@ -1,121 +1,15 @@
 import { useEffect, useState } from "react";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import LoadingBar from 'react-top-loading-bar'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import LoadingBar from "react-top-loading-bar";
+import emailjs from "emailjs-com";
 
 function Invoices() {
-  const genInvoices = async () => {
-    setProgress(30)
-    let hostel = JSON.parse(localStorage.getItem("hostel"));
-    try {
-      const res = await fetch("http://localhost:3000/api/invoice/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ hostel: hostel._id })
-      });
-      setProgress(60)
-      const data = await res.json();
-      console.log(data);
-      if (data.success) {
-        toast.success(
-          "Invoices generated succesfully!", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        })
-        getInvoices();
-      }
-      else {
-        toast.error(
-          data.errors, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        })
-      }
-    } catch (err) {
-      toast.error(
-        err.errors, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      })
-    }
-    setProgress(100)
-  };
+  const [progress, setProgress] = useState(0);
+  const [allInvoices, setAllInvoices] = useState([]);
+  const [pendingInvoices, setPendingInvoices] = useState([]);
 
-  const approveInvoice = async (id) => {
-    setProgress(30);
-    try {
-      const res = await fetch("http://localhost:3000/api/invoice/update", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ student: id, status: "approved" })
-      });
-      setProgress(60);
-      const data = await res.json();
-      if (data.success) {
-        toast.success(
-          "Invoice approved succesfully!", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        })
-        getInvoices();
-      }
-      else {
-        toast.error(
-          "Something went wrong!", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        })
-      }
-    } catch (err) {
-      toast.error(
-        "Something went wrong!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      })
-    }
-    setProgress(100);
-  };
-
+  // Fetch Invoices
   const getInvoices = async () => {
     setProgress(30);
     let hostel = JSON.parse(localStorage.getItem("hostel"));
@@ -123,50 +17,96 @@ function Invoices() {
       const res = await fetch("http://localhost:3000/api/invoice/getbyid", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ hostel: hostel._id })
+        body: JSON.stringify({ hostel: hostel._id }),
       });
       setProgress(60);
       const data = await res.json();
       console.log(data);
       if (data.success) {
         setAllInvoices(data.invoices);
-        setPendingInvoices(data.invoices.filter((invoice) => invoice.status === "pending"));
-      }
-      else {
-        toast.error(
-          data.errors, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        })
+        setPendingInvoices(
+          data.invoices.filter((invoice) => invoice.status === "pending")
+        );
+      } else {
+        toast.error(data.errors, { theme: "dark" });
       }
     } catch (err) {
-      toast.error(
-        err.errors, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-
-      })
+      toast.error("Error fetching invoices!", { theme: "dark" });
     }
     setProgress(100);
   };
 
-  const [Progress, setProgress] = useState(0)
-  const [allInvoices, setAllInvoices] = useState([]);
-  const [pendingInvoices, setPendingInvoices] = useState([]);
+  // Generate Invoices
+  const genInvoices = async () => {
+    setProgress(30);
+    let hostel = JSON.parse(localStorage.getItem("hostel"));
+    try {
+      const res = await fetch("http://localhost:3000/api/invoice/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ hostel: hostel._id }),
+      });
+      setProgress(60);
+      const data = await res.json();
+      if (data.success) {
+        toast.success("Invoices generated successfully!", { theme: "dark" });
+        getInvoices();
+      } else {
+        toast.error(data.errors, { theme: "dark" });
+      }
+    } catch (err) {
+      toast.error("Error generating invoices!", { theme: "dark" });
+    }
+    setProgress(100);
+  };
+
+  // Approve Invoice
+  const approveInvoice = async (id) => {
+    setProgress(30);
+    try {
+      const res = await fetch("http://localhost:3000/api/invoice/update", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ student: id, status: "approved" }),
+      });
+      setProgress(60);
+      const data = await res.json();
+      if (data.success) {
+        toast.success("Invoice approved successfully!", { theme: "dark" });
+        getInvoices();
+      } else {
+        toast.error("Error approving invoice!", { theme: "dark" });
+      }
+    } catch (err) {
+      toast.error("Error approving invoice!", { theme: "dark" });
+    }
+    setProgress(100);
+  };
+
+  // Send Invoice Email
+  const sendEmail = (email, amount) => {
+    emailjs
+      .send(
+        "service_zd8j699", // Replace with your EmailJS service ID
+        "template_8viibje", // Replace with your EmailJS template ID
+        { to_email: email, amount: amount },
+        "qKgzsdh_j7Y3WDoxz" // Replace with your EmailJS user ID
+      )
+      .then(() => {
+        toast.success("Invoice sent successfully!", { theme: "dark" });
+      })
+      .catch((err) => {
+        console.error("Email sending error:", err);
+        toast.error("Failed to send email!", { theme: "dark" });
+      });
+      console.log("Sending email to:", email);
+  };
 
   useEffect(() => {
     getInvoices();
@@ -174,9 +114,12 @@ function Invoices() {
 
   return (
     <div className="w-full h-screen flex flex-col gap-3 bg-primary items-center justify-center">
-      <LoadingBar color='#0000FF' progress={Progress} onLoaderFinished={() => setProgress(0)} />
+      <LoadingBar color="#0000FF" progress={progress} onLoaderFinished={() => setProgress(0)} />
       <h1 className="text-white font-bold text-5xl">Invoices</h1>
-      <button onClick={genInvoices} className="py-3 px-7 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-800 transition-all shadow-custom-black">
+      <button
+        onClick={genInvoices}
+        className="py-3 px-7 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-800 transition-all shadow-custom-black"
+      >
         Generate Invoices
       </button>
       <div className="bg-secondary px-10 py-5 rounded-xl shadow-custom-black sm:w-[50%] sm:min-w-[500px] w-full mt-5 max-h-96 overflow-auto">
@@ -190,68 +133,30 @@ function Invoices() {
                   key={invoice.id}
                 >
                   <div className="flex items-center space-x-4">
-                    <div className="flex-shrink-0 text-white">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-6 h-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z"
-                        />
-                      </svg>
-                    </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate text-white">
-                        {invoice.student.name}
-                      </p>
+                      <p className="text-sm font-medium truncate text-white">{invoice.student.name}</p>
                       <p className="text-sm truncate text-gray-400">
-                        Room: {invoice.student.room_no} | Amount: Rs.{" "}
-                        {invoice.amount}
+                        Room: {invoice.student.room_no} | Amount: Rs. {invoice.amount}
                       </p>
                     </div>
-                    <button className="group/show relative z-0" onClick={() => approveInvoice(invoice.student._id)}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-6 h-6 group-hover/show:scale-125 group-hover/show:text-green-600 transition-all"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-
-                      <span className="text-sm hidden absolute px-2 -right-10 top-6 bg-black text-center group-hover/show:block rounded">
-                        Approve Payment
-                      </span>
+                    <button
+                      onClick={() => sendEmail(invoice.student.email, invoice.amount)}
+                      className="py-1 px-3 rounded bg-green-500 text-white hover:bg-green-700 transition"
+                    >
+                      Send Email
+                    </button>
+                    <button
+                      onClick={() => approveInvoice(invoice.student._id)}
+                      className="py-1 px-3 rounded bg-blue-500 text-white hover:bg-blue-700 transition"
+                    >
+                      Approve
                     </button>
                   </div>
                 </li>
               ))}
         </ul>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
+      <ToastContainer />
     </div>
   );
 }

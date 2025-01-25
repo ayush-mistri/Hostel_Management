@@ -5,6 +5,8 @@ import { verifysession } from "../../../utils/";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Loader } from "../../Dashboards/Common/Loader";
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import the eye icons
+
 
 export default function SignIn() {
   let navigate = useNavigate();
@@ -71,12 +73,17 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [loader, setLoader] = useState(false)
+  const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
 
   const changeEmail = (event) => {
     setEmail(event.target.value);
   };
   const changePass = (event) => {
     setPass(event.target.value);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword); // Toggle password visibility
   };
 
   const iemail = {
@@ -88,7 +95,7 @@ export default function SignIn() {
   };
   const password = {
     name: "password",
-    type: "password",
+    type: showPassword ? "text" : "password", // Dynamically change input type
     placeholder: "••••••••",
     req: true,
     onChange: changePass,
@@ -102,7 +109,15 @@ export default function SignIn() {
         </h1>
         <form className="space-y-4 md:space-y-6" onSubmit={login}>
           <Input field={iemail} />
-          <Input field={password} />
+          <div className="relative">
+            <Input field={password} />
+            <span
+              onClick={togglePasswordVisibility}
+              className="absolute right-3 bottom-1 transform -translate-y-1/2 cursor-pointer"
+            >
+              {showPassword ? <FaEyeSlash className="text-gray-400" /> : <FaEye className="text-gray-400" />}
+            </span>
+          </div>
           <div className="flex items-center justify-between">
             <div className="flex items-start">
               <div className="flex items-center h-5">

@@ -1,264 +1,336 @@
 import { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
-import { getAllStudents } from "../../../utils";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import LoadingBar from 'react-top-loading-bar'
+import LoadingBar from "react-top-loading-bar";
+import { getAllStudents } from "../../../utils";
 
 function Attendance() {
+  const [progress, setProgress] = useState(0);
+  const [unmarkedStudents, setUnmarkedStudents] = useState([]);
+  const [markedStudents, setMarkedStudents] = useState([]);
+  const [groupedByRoom, setGroupedByRoom] = useState({});
+  const [openRoom, setOpenRoom] = useState(null); // Track the currently selected room
+  const [isModalOpen, setIsModalOpen] = useState(false); // Track modal state
+  const [present, setPresent] = useState(0);
+
+  // New states for pagination
+  const [currentRoomIndex, setCurrentRoomIndex] = useState(0);
+  // const [currentPage, setCurrentPage] = useState(0);
+  const roomsPerPage = 9; // Number of rooms to show per page
+
   const getALL = async () => {
     setProgress(30);
-    const marked = await fetch("http://localhost:3000/api/attendance/getHostelAttendance", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const markedResponse = await fetch(
+      "http://localhost:3000/api/attendance/getHostelAttendance",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ hostel: JSON.parse(localStorage.getItem("hostel"))._id }),
-        });
-    setProgress(40);
-    const markedData = await marked.json();
-    setProgress(50)
+        body: JSON.stringify({
+          hostel: JSON.parse(localStorage.getItem("hostel"))._id,
+        }),
+      }
+    );
+
+    const markedData = await markedResponse.json();
+    setProgress(50);
+
     if (markedData.success) {
-      console.log("Attendance: ", markedData.attendance);
-    }
-    const markedStudents = markedData.attendance.map((student) => {
-      return {
+      const markedStudentsData = markedData.attendance.map((student) => ({
         id: student.student._id,
         cms: student.student.cms_id,
         name: student.student.name,
         room: student.student.room_no,
-        attendance: student.status === "present" ? true : false,
-      };
-    });
-    setProgress(70);
-    setMarkedStudents(markedStudents);
-    const data = await getAllStudents();
-    const students = data.students;
-    const unmarkedStudents = students.filter(
-      (student) =>
-        !markedStudents.find((markedStudent) => markedStudent.id === student._id)
-    );
-    setProgress(90);
-    unmarkedStudents.map((student) => {
-      student.id = student._id;
-      student.cms = student.cms_id;
-      student.name = student.name;
-      student.room = student.room_no;
-      student.attendance = undefined;
-    });
-    setunmarkedStudents(unmarkedStudents);
-    setProgress(100);
+        attendance: student.status === "present",
+      }));
+      setMarkedStudents(markedStudentsData);
+      setProgress(70);
+
+      const data = await getAllStudents();
+      const allStudents = data.students;
+
+      const unmarkedStudentsData = allStudents
+        .filter(
+          (student) =>
+            !markedStudentsData.find(
+              (markedStudent) => markedStudent.id === student._id
+            )
+        )
+        .map((student) => ({
+          id: student._id,
+          cms: student.cms_id,
+          name: student.name,
+          room: student.room_no,
+          attendance: undefined,
+        }));
+
+      setUnmarkedStudents(unmarkedStudentsData);
+      setProgress(90);
+      setGroupedByRoom(
+        groupStudentsByRoom(markedStudentsData.concat(unmarkedStudentsData))
+      );
+      setProgress(100);
+    }
   };
 
-  const [progress, setProgress] = useState(0)
-  const [unmarkedStudents, setunmarkedStudents] = useState([]);
-  const [markedStudents, setMarkedStudents] = useState([]);
+  const groupStudentsByRoom = (students) => {
+    return students.reduce((acc, student) => {
+      if (!acc[student.room]) {
+        acc[student.room] = [];
+      }
+      acc[student.room].push(student);
+      return acc;
+    }, {});
+  };
 
   const markAttendance = async (id, isPresent) => {
-    const data = await fetch(`http://localhost:3000/api/attendance/mark`, {
+    const response = await fetch(`http://localhost:3000/api/attendance/mark`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ student:id, status: isPresent? "present" : "absent" }),
+      body: JSON.stringify({
+        student: id,
+        status: isPresent ? "present" : "absent",
+      }),
     });
-    const response = await data.json();
-    if (response.success) {
-      toast.success(
-        "Attendance Marked Successfully!", {
+
+    const data = await response.json();
+    if (data.success) {
+      toast.success("Attendance Marked Successfully!", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
       });
+
+      const updatedUnmarkedStudents = unmarkedStudents.filter(
+        (student) => student.id !== id
+      );
+      const updatedMarkedStudents = [
+        ...markedStudents,
+        { id, attendance: isPresent },
+      ];
+
+      const updatedGroupedByRoom = { ...groupedByRoom };
+      for (const room in updatedGroupedByRoom) {
+        updatedGroupedByRoom[room] = updatedGroupedByRoom[room].filter(
+          (student) => student.id !== id
+        );
+      }
+
+      setUnmarkedStudents(updatedUnmarkedStudents);
+      setMarkedStudents(updatedMarkedStudents);
+      setGroupedByRoom(updatedGroupedByRoom); // Update the room structure
     }
-
-    unmarkedStudents.find((student) => student.id === id).attendance =
-      isPresent;
-    setunmarkedStudents(
-      unmarkedStudents.filter((student) => student.attendance === undefined)
-    );
-    setMarkedStudents((markedStudents) =>
-      markedStudents.concat(
-        unmarkedStudents.filter((student) => student.attendance !== undefined)
-      )
-    );
   };
-
-  const [present, setPresent] = useState(0);
 
   useEffect(() => {
     getALL();
-    console.log("State: ", unmarkedStudents);
-    console.log("Marked: ", markedStudents);
-    setPresent(
-      markedStudents.filter((student) => student.attendance === true).length
-    );
-    console.log("Present: ", present);
-  }, [unmarkedStudents.length, markedStudents.length]);
+  }, []);
 
-  let date = new Date();
-  date = date.toLocaleDateString("en-US", {
+  useEffect(() => {
+    setPresent(markedStudents.filter((student) => student.attendance).length);
+  }, [markedStudents]);
+
+  const date = new Date().toLocaleDateString("en-US", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
 
-  const labels = ["Present", "Absentees", "Unmarked Students"];
-  const graph = (
-    <div className="flex flex-row-reverse items-center gap-3 h-64">
-      <Doughnut
-        datasetIdKey="id"
-        data={{
-          labels,
-          datasets: [
-            {
-              label: "No. of Students",
-              data: [
-                present,
-                markedStudents.length - present,
-                unmarkedStudents.length,
-              ],
-              backgroundColor: ["#1D4ED8", "#F26916", "#808080"],
-              barThickness: 20,
-              borderRadius: 0,
-              borderJoinStyle: "round",
-              borderColor: "rgba(0,0,0,0)",
-              hoverOffset: 10,
-            },
-          ],
-        }}
-        options={{
-          plugins: {
-            legend: {
-              display: false,
-            },
-          },
-        }}
-      />
-      <ul className="text-white">
-        <li className="flex gap-2">
-          {" "}
-          <span className="w-10 h-5 bg-orange-500 block"></span> Absent
-        </li>
-        <li className="flex gap-2">
-          {" "}
-          <span className="w-10 h-5 bg-blue-500 block"></span> Present
-        </li>
-      </ul>
-    </div>
-  );
+  const RoomCard = ({ roomNumber, students }) => {
+    // Check if all students in the room are marked
+    const allMarked = students.every(
+      (student) => student.attendance !== undefined
+    );
+    const attendancecolor = allMarked ? "text-green-500" : "text-red-500";
 
+    return (
+      <div
+        className="w-72 h-24 flex flex-col items-center justify-center bg-secondary text-white font-bold text-2xl rounded-lg shadow-custom-black cursor-pointer transition-all transform hover:scale-105 mb-3"
+        onClick={() => openModal(roomNumber)}
+      >
+        <span>Room {roomNumber}</span>
 
-  return (
-    <div className="w-full h-screen flex flex-col gap-3 items-center xl:pt-0 md:pt-40 pt-64 justify-center bg-primary overflow-auto max-h-screen">
-      <LoadingBar color="#0000FF" progress={progress} onLoaderFinished={() => setProgress(0)} />
-      <h1 className="text-white font-bold text-5xl">Attendance</h1>
-      <p className="text-white text-xl mb-10">Date: {date}</p>
-      <div className="flex gap-5 flex-wrap items-center justify-center">
-        {/* <>{graph}</> */}
-        <div className="flow-root md:w-[400px] w-full bg-secondary px-7 py-5 rounded-lg shadow-custom-black max-h-[250px] overflow-auto">
-          <span
-            className={`font-bold text-xl text-white ${
-              unmarkedStudents.length ? "block" : "hidden"
-            }`}
+        <span
+          className={`text-lg ${attendancecolor} font-semibold italic text-sm`}
+        >
+          {allMarked ? "All marked" : "Remain"}
+        </span>
+      </div>
+    );
+  };
+
+  const Modal = ({ roomNumber, students, closeModal }) => {
+    const unmarkedStudents = students.filter(
+      (student) => student.attendance === undefined
+    );
+
+    return (
+      <div className="fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[100%] max-h-full flex items-center justify-center bg-black bg-opacity-75">
+        <div className="relative w-full max-w-2xl max-h-full lg:translate-x-[17%] rounded-lg shadow bg-secondary p-7">
+          <svg
+            onClick={closeModal}
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            className="w-6 h-6 text-gray-400 absolute top-4 right-4 cursor-pointer rounded-lg inline-flex items-center hover:bg-highlight hover:text-white mb-4"
           >
-            Unmarked Students
-          </span>
-          <ul role="list" className="divide-y divide-gray-700 text-white">
-            {unmarkedStudents.length === 0
-              ? "All students are marked!"
-              : unmarkedStudents.map((student) =>
-                  student.attendance === undefined ? (
-                    <li
-                      className="my-2 py-3 sm:py-2 px-5 rounded hover:bg-highlight hover:scale-105 transition-all"
-                      key={student.id}
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+
+          <h2 className="text-lg font-bold mb-4 text-white">
+            Students in Room {roomNumber}
+          </h2>
+          {unmarkedStudents.length > 0 ? (
+            <ul className="text-white divide-y divide-gray-500">
+              {unmarkedStudents.map((student) => (
+                <li
+                  key={student.id}
+                  className="flex justify-between items-center py-3"
+                >
+                  <div className="flex-1">
+                    <p className="text-white">{student.name}</p>
+                    <p className="text-sm text-gray-300">CMS: {student.cms}</p>
+                  </div>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => markAttendance(student.id, false)}
+                      className="py-1 px-4 bg-red-500 text-white rounded hover:bg-red-700"
                     >
-                      <div className="flex items-center space-x-4">
-                        <div className="flex-shrink-0 text-white">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="w-6 h-6"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                            />
-                          </svg>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate text-white">
-                            {student.name}
-                          </p>
-                          <p className="text-sm truncate text-gray-400">
-                            {student.cms} | Room: {student.room}
-                          </p>
-                        </div>
-                        <button
-                          className="hover:underline hover:text-green-600 hover:scale-125 transition-all"
-                          onClick={() => markAttendance(student.id, true)}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="w-6 h-6"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                        </button>
-                        <button
-                          className="hover:underline hover:text-red-600 hover:scale-125 transition-all"
-                          onClick={() => markAttendance(student.id, false)}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="w-6 h-6"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </li>
-                  ) : (
-                    ""
-                  )
-                )}
-          </ul>
+                      Absent
+                    </button>
+                    <button
+                      onClick={() => markAttendance(student.id, true)}
+                      className="py-1 px-4 bg-blue-600 text-white rounded hover:bg-blue-800"
+                    >
+                      Present
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-white text-center">
+              All students have been marked.
+            </p>
+          )}
         </div>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme= "dark"
+    );
+  };
+
+  const openModal = (roomNumber) => {
+    setOpenRoom(roomNumber);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setOpenRoom(null);
+  };
+
+  const areAllStudentsMarked = (students) => {
+    return students.every((student) => student.attendance !== undefined);
+  };
+
+  const roomKeys = Object.keys(groupedByRoom);
+  const totalRooms = roomKeys.length;
+  const totalPages = Math.ceil(totalRooms / roomsPerPage);
+  const startIndex = currentRoomIndex * roomsPerPage; // Calculate start index for the current page
+  const endIndex = Math.min(startIndex + roomsPerPage, totalRooms); // Ensure we don't exceed total rooms
+  const currentRooms = roomKeys.slice(startIndex, endIndex);
+
+  const handlePrevious = () => {
+    if (currentRoomIndex > 0) {
+      setCurrentRoomIndex(currentRoomIndex - 1); // Move to the previous page
+    }
+  };
+
+  // Function to handle the next page
+  const handleNext = () => {
+    if ((currentRoomIndex + 1) * roomsPerPage < totalRooms) {
+      setCurrentRoomIndex(currentRoomIndex + 1); // Move to the next page
+    }
+  };
+
+  return (
+    <div className="w-full h-screen flex flex-col gap-3 items-center justify-center bg-primary overflow-auto max-h-screen">
+      <LoadingBar
+        color="#0000FF"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
       />
+      <h1 className="text-white font-bold text-5xl">Attendance</h1>
+      <p className="text-white text-xl mb-8">Date: {date}</p>
+
+      {/* Room Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {currentRooms.map((roomNumber) => {
+          const students = groupedByRoom[roomNumber]; // Get students for the current room
+          return (
+            <RoomCard
+              key={roomNumber} // Unique key for each room card
+              roomNumber={roomNumber}
+              students={students}
+            />
+          );
+        })}
+      </div>
+
+      {/* Next/Previous Buttons */}
+      <div className="flex items-center gap-5 w-full justify-center fixed bottom-0 py-10">
+        {/* Previous Button */}
+        <button
+          onClick={handlePrevious}
+          className={`py-2 px-4 rounded ${
+            currentRoomIndex === 0
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-800 text-white"
+          }`}
+          disabled={currentRoomIndex === 0} // Disable if on the first page
+        >
+          Previous
+        </button>
+
+        {/* Page Number Display */}
+        <span className="text-white font-bold">
+          Page {currentRoomIndex + 1} of {totalPages}
+        </span>
+
+        {/* Next Button */}
+        <button
+          onClick={handleNext}
+          className={`py-2 px-4 rounded ${
+            (currentRoomIndex + 1) * roomsPerPage >= totalRooms
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-800 text-white"
+          }`}
+          disabled={(currentRoomIndex + 1) * roomsPerPage >= totalRooms} // Disable if on the last page
+        >
+          Next
+        </button>
+      </div>
+
+      <ToastContainer />
+
+      {isModalOpen && openRoom && (
+        <Modal
+          roomNumber={openRoom}
+          students={groupedByRoom[openRoom]}
+          closeModal={closeModal}
+        />
+      )}
     </div>
   );
 }

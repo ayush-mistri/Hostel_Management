@@ -106,7 +106,7 @@ exports.updateInvoice = async (req, res) => {
     let success = false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array(), success });
+        return res.status(400).json({ errors: errors.array(), success });   
     }
     const { student, status } = req.body;
     try {

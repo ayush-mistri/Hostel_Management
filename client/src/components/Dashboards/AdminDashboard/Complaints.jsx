@@ -6,17 +6,14 @@ import "react-toastify/dist/ReactToastify.css";
 function Complaints() {
   const getComplaints = async () => {
     const hostel = JSON.parse(localStorage.getItem("hostel"))._id;
-    const response = await fetch(
-      `http://localhost:3000/api/complaint/hostel`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ hostel }),
-      }
-    );
-  
+    const response = await fetch(`http://localhost:3000/api/complaint/hostel`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ hostel }),
+    });
+
     const data = await response.json();
     if (data.success) {
       console.log("Complaints fetched:", data.complaints); // Check fetched complaints
@@ -30,18 +27,22 @@ function Complaints() {
           student: complaint.student.name,
           room: complaint.student.room_no,
           status: complaint.status,
-          date: date.toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" }),
+          date: date.toLocaleDateString("en-US", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          }),
         };
       });
-  
+
       setAllComplaints(complaints);
-  
+
       const pendingComplaints = complaints.filter(
         (complaint) => complaint.status.toLowerCase() === "pending"
       );
       console.log("Pending complaints:", pendingComplaints); // Log pending complaints
       setComplaints(pendingComplaints);
-  
+
       const resolved = complaints.filter(
         (complaint) => complaint.status.toLowerCase() !== "pending"
       );
@@ -49,7 +50,7 @@ function Complaints() {
     } else {
       console.log("Error fetching complaints:", data);
     }
-  };  
+  };
 
   //!AFTER FETCH FILL THIS WITH COMPLAINT DATA
   const [unsolvedComplaints, setComplaints] = useState([]);
@@ -71,34 +72,29 @@ function Complaints() {
 
     const data = await response.json();
     if (data.success) {
-      toast.success("Complaint Dismissed",
-        {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true
-        });
-      setComplaints(
-        allComplaints.filter((complaint) => complaint.id !== id)
-      );
+      toast.success("Complaint Solved", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      setComplaints(allComplaints.filter((complaint) => complaint.id !== id));
       setResolvedComplaints(
         resolvedComplaints.concat(
           allComplaints.filter((complaint) => complaint.id === id)
         )
       );
-    }
-    else{
-      toast.error("Something went wrong",
-        {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true
-          });
+    } else {
+      toast.error("Something went wrong", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
 
@@ -144,7 +140,11 @@ function Complaints() {
           allComplaints.filter((complaint) => complaint.date === date).length
       )
     );
-  }, [allComplaints.length, unsolvedComplaints.length, resolvedComplaints.length]);
+  }, [
+    allComplaints.length,
+    unsolvedComplaints.length,
+    resolvedComplaints.length,
+  ]);
 
   const graph = (
     <div className="flex items-center justify-center md:h-64 h-40 md:w-96 w-full">
@@ -210,50 +210,67 @@ function Complaints() {
             {unsolvedComplaints.length === 0
               ? "No new complaints!"
               : unsolvedComplaints.map((complaint) => (
-                <li
-                  className="my-2 py-3 sm:py-2 px-5 rounded hover:bg-highlight hover:scale-105 transition-all"
-                  key={complaint.student}
-                >
-                  <div className="flex items-center space-x-4">
-                    <div className="flex-shrink-0 text-white">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                        className="w-7 h-7"
+                  <li
+                    className="my-2 py-3 sm:py-2 px-5 rounded hover:bg-highlight hover:scale-105 transition-all"
+                    key={complaint.student}
+                  >
+                    <div className="flex items-center space-x-4">
+                      <div className="flex-shrink-0 text-white">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={2}
+                          stroke="currentColor"
+                          className="w-7 h-7"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
+                          />
+                        </svg>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <span className="text-sm font-medium truncate text-white">
+                          {complaint.student}
+                        </span>
+                        <span className="p-2 text-sm font-medium truncate text-white">
+                          [ Room : {complaint.room} ]
+                        </span>
+                        <p className="text-sm font-medium truncate text-white">
+                          {complaint.title}
+                        </p>
+                        <p className="text-sm truncate text-gray-400">
+                          {complaint.desc}
+                        </p>
+                      </div>
+                      <button
+                        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-800 text-white py-2 px-4 rounded"
+                        onClick={() => dismissComplaint(complaint.id)}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
-                        />
-                      </svg>
+                        {/* Pending SVG Icon */}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={2}
+                          stroke="currentColor"
+                          className="w-5 h-5 animate-spin"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 4.75V12m0 0h7.25"
+                          />
+                          <circle cx="12" cy="12" r="9" stroke="currentColor" />
+                        </svg>
+                        {/* Button Text */}
+                        Pending
+                      </button>
                     </div>
-                    <div className="flex-1 min-w-0">
-                    <span className="text-sm font-medium truncate text-white">
-                        {complaint.student}
-                      </span>
-                      <span className="p-2 text-sm font-medium truncate text-white">
-                        [ Room :  {complaint.room} ]
-                      </span>
-                      <p className="text-sm font-medium truncate text-white">
-                        {complaint.title}
-                      </p>
-                      <p className="text-sm truncate text-gray-400">
-                        {complaint.desc}
-                      </p>
-                    </div>
-                    <button
-                      className="hover:underline hover:text-green-600"
-                      onClick={() => dismissComplaint(complaint.id)}
-                    >
-                      Solved
-                    </button>
-                  </div>
-                </li>
-              ))}
+                  </li>
+                ))}
           </ul>
         </div>
       </div>

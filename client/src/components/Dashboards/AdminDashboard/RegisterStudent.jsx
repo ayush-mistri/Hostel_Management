@@ -6,9 +6,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function RegisterStudent() {
-
-
-  
   const registerStudent = async (e) => {
     e.preventDefault();
     try {
@@ -114,7 +111,7 @@ function RegisterStudent() {
 
   return (
     <div className="w-full max-h-screen pt-20 flex flex-col bg-primary items-center justify-center">
-      <h1 className="text-white font-bold text-5xl mt-10 mb-8">
+      <h1 className="text-white font-bold text-5xl mt-8 mb-8">
         Register Student
       </h1>
       <div className="md:w-[60vw] w-full p-10 bg-secondary rounded-lg shadow-custom-black mb-10 overflow-auto">
@@ -156,8 +153,8 @@ function RegisterStudent() {
           />
           <Input
             field={{
-              name: "cnic",
-              placeholder: "Student CNIC",
+              name: "Aadhar number",
+              placeholder: "Student Aadhar number",
               type: "text",
               req: true,
               value: cnic,
@@ -188,7 +185,7 @@ function RegisterStudent() {
           />
           <Input
             field={{
-              name: "father_name",
+              name: "father name",
               placeholder: "Father's Name",
               type: "text",
               req: true,
@@ -211,7 +208,7 @@ function RegisterStudent() {
               required
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              className="border flex-grow sm:text-sm rounded-lg block w-full p-2.5 bg-highlight border-neutral-600 placeholder-black text-white focus:ring-black focus:border-black outline-none"
+              className="border sm:text-sm rounded-lg block w-full p-2.5 bg-highlight border-secondary placeholder-gray-400 text-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-100"
             />
           </div>
 
@@ -220,7 +217,7 @@ function RegisterStudent() {
             <Input
               field={{
                 name: "college",
-                placeholder: "Department",
+                placeholder: "college",
                 type: "text",
                 req: true,
                 value: dept,
@@ -230,7 +227,7 @@ function RegisterStudent() {
             <Input
               field={{
                 name: "department",
-                placeholder: "Course",
+                placeholder: "department",
                 type: "text",
                 req: true,
                 value: course,

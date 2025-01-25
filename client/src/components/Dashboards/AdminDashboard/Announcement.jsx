@@ -12,16 +12,25 @@ function Announcement() {
 
   const registerAnnouncement = async (e) => {
     e.preventDefault();
-    const student = JSON.parse(localStorage.getItem("student"));
+    const admin = JSON.parse(localStorage.getItem("admin")); // Assuming admin data is in localStorage
+
+    if (!admin) {
+      toast.error("You must be logged in as an admin to create an announcement.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+      });
+      return;
+    }
 
     try {
-      const response = await fetch("http://localhost:3000/api/announcements/create", {
+      const response = await fetch("http://localhost:3000/api/announcement/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          studentId: student._id,
+          adminId: admin._id, // Send admin's ID in the request body
           title,
           description: desc,
         }),
@@ -35,11 +44,11 @@ function Announcement() {
           hideProgressBar: false,
         });
 
-        // Optionally clear form after success
+        // Optionally clear the form after success
         setTitle("");
         setDesc("");
       } else {
-        toast.error("Announcement creation failed!", {
+        toast.error(data.message || "Announcement creation failed!", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -64,12 +73,12 @@ function Announcement() {
   };
 
   return (
-    <div className="w-full h-screen flex flex-col gap-10 items-center justify-center max-h-screen overflow-y-auto">
-      <h1 className="text-white font-bold text-5xl mt-5">Announcement</h1>
+    <div className="w-full h-screen flex flex-col gap-10 items-center justify-center overflow-y-auto">
+      <h1 className="text-white font-bold text-5xl mt-5">Create Announcement</h1>
       <form
         method="POST"
         onSubmit={registerAnnouncement}
-        className="md:w-[30vw] w-full py-5 pb-7 px-10 bg-secondary rounded-lg shadow-custom-black flex flex-col gap-5"
+        className="md:w-[30vw] w-full py-5 pb-7 px-10 bg-secondary rounded-lg shadow-lg flex flex-col gap-5"
       >
         <Input field={suggestionTitle} />
         <div>
@@ -82,7 +91,7 @@ function Announcement() {
           <textarea
             name="description"
             placeholder="Description..."
-            className="border sm:text-sm rounded-lg block w-full p-2.5 bg-highlight border-secondary placeholder-black text-white focus:ring-black focus:border-black outline-none"
+            className="border sm:text-sm rounded-lg w-full p-2.5 bg-highlight border-secondary placeholder-black text-white focus:ring-2 focus:ring-black outline-none"
             onChange={descChange}
             value={desc}
           ></textarea>
@@ -96,7 +105,6 @@ function Announcement() {
       </form>
       <ToastContainer position="top-right" autoClose={3000} theme="dark" />
     </div>
-
   );
 }
 

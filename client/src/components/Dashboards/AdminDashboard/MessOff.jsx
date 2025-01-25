@@ -162,10 +162,10 @@ const reject = (id) => {
                   </div>
                   <div className="flex gap-3">
                     <button
-                      className="group/show relative z-0"
+                      className="bg-blue-600 hover:bg-blue-800 text-white py-2 px-4 rounded"
                       onClick={() => approve(req.id)}
                     >
-                      <svg
+                      {/* <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
@@ -179,13 +179,14 @@ const reject = (id) => {
                           strokeLinejoin="round"
                           d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                         />
-                      </svg>
+                      </svg> */}
 
-                      <span className="text-sm hidden absolute px-2 -right-10 top-6 bg-black text-center group-hover/show:block rounded">
-                        Approve.
-                      </span>
+                      {/* <span className="text-sm hidden absolute px-2 -right-10 top-6 bg-black text-center group-hover/show:block rounded">
+                        Approve
+                      </span> */}
+                      Approve
                     </button>
-                    <button
+                    {/* <button
                       className="group/show relative z-0"
                       onClick={() => reject(req.id)}
                     >
@@ -208,7 +209,7 @@ const reject = (id) => {
                       <span className="text-sm hidden absolute px-2 -right-10 top-6 bg-black text-center group-hover/show:block rounded">
                         Reject.
                       </span>
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               </li>

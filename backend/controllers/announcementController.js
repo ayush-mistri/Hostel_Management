@@ -1,17 +1,23 @@
 const Announcement = require('../models/Announcement');
-const Admin = require('../models/Admin'); // Assuming you're using an Admin model
+const Admin = require('../models/Admin'); 
 
 exports.createAnnouncement = async (req, res) => {
   try {
-    const { title, description, studentId } = req.body;
+    const { title, description, adminId } = req.body;
 
-    if (!title || !description || !studentId) {
-      return res.status(400).json({ success: false, message: 'Title, description, and student ID are required' });
+    if (!title || !description || !adminId) {
+      return res.status(400).json({ success: false, message: 'Title, description, and admin ID are required' });
+    }
+
+    // Check if the admin exists
+    const admin = await Admin.findById(adminId);
+    if (!admin) {
+      return res.status(404).json({ success: false, message: 'Admin not found' });
     }
 
     // Create and save the announcement
     const newAnnouncement = new Announcement({
-      admin: studentId, // Use studentId instead of student
+      admin: adminId,
       title,
       description
     });

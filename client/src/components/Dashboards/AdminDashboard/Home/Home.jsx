@@ -5,7 +5,9 @@ import { getAllStudents } from "../../../../utils";
 function Home() {
   // Retrieve admin and hostel details from localStorage
   const admin = JSON.parse(localStorage.getItem("admin")) || { name: "admin" };
-  const hostel = JSON.parse(localStorage.getItem("hostel")) || { name: "hostel" };
+  const hostel = JSON.parse(localStorage.getItem("hostel")) || {
+    name: "hostel",
+  };
 
   // State to store fetched data
   const [allStudents, setAllStudents] = useState([]);
@@ -74,29 +76,28 @@ function Home() {
   };
 
   // Fetch complaints count
-const fetchComplaintsCount = async () => {
-  try {
-    const res = await fetch("http://localhost:3000/api/complaint/hostel", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ hostel: hostel._id }),
-    });
-    const data = await res.json();
-    if (data.success) {
-      // Filter pending complaints
-      const pendingComplaints = data.complaints.filter(
-        (complaint) => complaint.status === "pending"
-      );
-      // Set the count of pending complaints
-      setTotalComplaints(pendingComplaints.length);
+  const fetchComplaintsCount = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/complaint/hostel", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ hostel: hostel._id }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        // Filter pending complaints
+        const pendingComplaints = data.complaints.filter(
+          (complaint) => complaint.status === "pending"
+        );
+        // Set the count of pending complaints
+        setTotalComplaints(pendingComplaints.length);
+      }
+    } catch (error) {
+      console.error("Failed to fetch complaints:", error);
     }
-  } catch (error) {
-    console.error("Failed to fetch complaints:", error);
-  }
-};
-
+  };
 
   // Fetch total mess requests count
   const fetchTotalMessRequestsCount = async () => {
@@ -127,17 +128,37 @@ const fetchComplaintsCount = async () => {
   }, []);
 
   return (
-    <div className="w-full h-screen flex flex-col gap-3 items-center justify-center max-h-screen overflow-x-hidden overflow-y-auto pt-[400px] sm:pt-96 md:pt-96 lg:pt-80 xl:pt-20">
+    <div className="w-full h-screen flex flex-col gap-3 items-center justify-center max-h-screen overflow-x-hidden overflow-y-auto pt-[400px] sm:pt-96 md:pt-96 lg:pt-80 xl:pt-10">
       <h1 className="text-white font-bold text-5xl text-center">
         Welcome <span className="text-blue-500">{admin.name}!</span>
       </h1>
-      <h1 className="text-white text-xl">Manager, {hostel.name}</h1>
+      <h1 className="text-white text-xl mb-6">Manager, {hostel.name}</h1>
       <div className="flex w-full gap-8 sm:px-20 pt-5 flex-wrap items-center justify-center">
-        <ShortCard title="Total Students" number={allStudents.length} />
-        <ShortCard title="Pending Complaints" number={totalComplaints} />
-        <ShortCard title="Pending Suggestions" number={totalSuggestions} />
-        <ShortCard title="Pending Mess Requests" number={totalMessRequests} />
-        <ShortCard title="Pending Attendance" number={totalSuggestions} />
+        <ShortCard
+          title="Total Students"
+          number={allStudents.length}
+          path="/admin-dashboard/all-students"
+        />
+        <ShortCard
+          title="Pending Complaints"
+          number={totalComplaints}
+          path="/admin-dashboard/complaints"
+        />
+        <ShortCard
+          title="Pending Suggestions"
+          number={totalSuggestions}
+          path="/admin-dashboard/suggestions"
+        />
+        <ShortCard
+          title="Pending Mess Requests"
+          number={totalMessRequests}
+          path="/admin-dashboard/mess"
+        />
+        <ShortCard
+          title="Pending Attendance"
+          number={totalSuggestions}
+          path="/admin-dashboard/attendance"
+        />
       </div>
     </div>
   );

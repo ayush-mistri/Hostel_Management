@@ -148,7 +148,15 @@ function Suggestions() {
         </ul>
       </div>
       <ToastContainer />
-      {showModal && <Modal closeModal={toggleModal} suggestion={modalData} />}
+      {/* {showModal && <Modal closeModal={toggleModal} suggestion={modalData} />} */}
+      {showModal && (
+  <Modal
+    closeModal={toggleModal}
+    suggestion={modalData}
+    acknowledgeSuggestion={updateSuggestion} // Pass this function
+  />
+)}
+
     </div>
   );
 }

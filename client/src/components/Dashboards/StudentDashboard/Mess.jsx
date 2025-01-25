@@ -33,9 +33,7 @@ function Mess() {
     onChange: (e) => setReturnDate(e.target.value),
   };
 
-  useEffect(() => {
-  fetchRequestsList();
-}, []);
+
 
 const fetchRequestsList = async () => {
   const student = JSON.parse(localStorage.getItem("student"));
@@ -67,6 +65,10 @@ const fetchRequestsList = async () => {
     }
   }
 };
+
+useEffect(() => {
+  fetchRequestsList();
+}, []);
 
 useEffect(() => {
   console.log("Requests List updated:", requestsList); // Log the updated list

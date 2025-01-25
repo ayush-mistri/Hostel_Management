@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Loader } from "../../Dashboards/Common/Loader";
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import the eye icons
 
 export default function AdminSignIn() {
   let navigate = useNavigate();
@@ -96,12 +97,17 @@ export default function AdminSignIn() {
   const [loader, setLoader] = useState(false);
   const [inputEmail, setInputEmail] = useState("");
   const [pass, setPass] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
 
   const changeEmail = (event) => {
     setInputEmail(event.target.value);
   };
   const changePass = (event) => {
     setPass(event.target.value);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword); // Toggle password visibility
   };
 
   const email = {
@@ -114,7 +120,7 @@ export default function AdminSignIn() {
   };
   const password = {
     name: "password",
-    type: "password",
+    type: showPassword ? "text" : "password", // Dynamically change input type
     placeholder: "••••••••",
     req: true,
     onChange: changePass,
@@ -129,15 +135,22 @@ export default function AdminSignIn() {
         </h1>
         <form className="space-y-4 md:space-y-6" onSubmit={login}>
           <Input field={email} />
-          <Input field={password} />
+          <div className="relative">
+            <Input field={password} />
+            <span
+              onClick={togglePasswordVisibility}
+              className="absolute right-3 bottom-1 transform -translate-y-1/2 cursor-pointer"
+            >
+              {showPassword ? <FaEyeSlash className="text-gray-400" /> : <FaEye className="text-gray-400" />}
+            </span>
+          </div>
           <div className="flex items-center justify-between">
             <div className="flex items-start">
               <div className="flex items-center h-5">
                 <input
                   type="checkbox"
                   className="w-4 h-4 border rounded focus:ring-3 bg-gray-700 border-gray-600 focus:ring-blue-600 ring-offset-gray-800"
-                  required=""
-                />
+                  required=""/>
               </div>
               <div className="ml-3 text-sm">
                 <label htmlFor="remember" className="text-gray-300">

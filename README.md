@@ -53,7 +53,15 @@ npm i -g concurrently
 
 ```sh
 npm run dev
+
 ```
+## Project Screenshots
+![Hostel Management System](images/Home_Page.png)
+![Hostel Management System](images/Login.png)
+![Hostel Management System](images/Admin_Dashboard.png)
+![Hostel Management System](images/Show_Complain.png)
+![Hostel Management System](images/Send_Complain.png)
+![Hostel Management System](images/Student_Dashboard.png)
 
 ## Login Details
 - AdminLogin

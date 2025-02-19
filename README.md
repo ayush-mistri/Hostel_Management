@@ -17,6 +17,14 @@ It is a MERN stack application built for ease of hostel management.
     - Viewing invoices
     - Making complaints
     - Making suggestions
+     
+## Project Screenshot
+![image](https://github.com/user-attachments/assets/4f4edef5-2524-449d-a024-614b7756157e)
+![image](https://github.com/user-attachments/assets/7e8053a2-e917-4c20-8ab9-9661b313e899)
+![image](https://github.com/user-attachments/assets/30952d47-3ae1-46ad-b055-6b7fc0d614f5)
+![image](https://github.com/user-attachments/assets/0a9b4eca-75c5-401e-8bd9-9337a9ef4dd8)
+![image](https://github.com/user-attachments/assets/6544d72a-716c-4fb9-a9f4-7430f6cf5dcf)
+![image](https://github.com/user-attachments/assets/b694235b-de00-4998-999b-5eb7b764ffa2)
 
 ## Installation
 Install [Node.js](https://nodejs.org/en/download) and [MongoDB](https://www.mongodb.com/try/download/community) on your system.

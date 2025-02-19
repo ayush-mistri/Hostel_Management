@@ -38,7 +38,7 @@ router.post('/update', [
 // @access  Public
 router.get('/student/getEmail/:studentId', async (req, res) => {
     try {
-        const student = await Student.findById(req.params.studentId); // Assuming you have a Student model
+        const student = await Student.findById(req.params.studentId); 
         if (!student) {
             return res.status(404).json({ success: false, message: 'Student not found' });
         }

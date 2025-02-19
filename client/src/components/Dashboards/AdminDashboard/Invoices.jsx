@@ -26,6 +26,7 @@ function Invoices() {
       console.log(data);
       if (data.success) {
         setAllInvoices(data.invoices);
+        console.log(data.invoices)
         setPendingInvoices(
           data.invoices.filter((invoice) => invoice.status === "pending")
         );
@@ -91,6 +92,7 @@ function Invoices() {
 
   // Send Invoice Email
   const sendEmail = (email, amount) => {
+    console.log(email)
     emailjs
       .send(
         "service_zd8j699", // Replace with your EmailJS service ID

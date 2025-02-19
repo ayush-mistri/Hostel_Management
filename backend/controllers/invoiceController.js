@@ -68,7 +68,7 @@ exports.getInvoicesbyid = async (req, res) => {
     const { hostel } = req.body;
     let student = await Student.find({ hostel: hostel });
     try {
-        let invoices = await Invoice.find({ student: student }).populate('student', ['name', 'room_no', 'cms_id']);
+        let invoices = await Invoice.find({ student: student }).populate('student', ['name', 'room_no', 'cms_id', 'email']);
         success = true;
         res.status(200).json({ success, invoices });
     }

@@ -10,7 +10,7 @@ TeamCard.propTypes = {
 
 function TeamCard({ member }) {
   return (
-    <div className="rounded-lg shadow-custom-black p-6 bg-secondary">
+    <div className="rounded-lg shadow-custom-black p-8 bg-secondary">
       <div className="relative overflow-hidden rounded-full w-40 h-40 mx-auto mb-4">
         <img
           className="absolute inset-0 w-full h-full object-cover object-center rounded-full"

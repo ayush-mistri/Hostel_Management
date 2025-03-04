@@ -3,35 +3,37 @@ import { Link } from "react-router-dom";
 
 function HeroSection() {
   return (
-    <main className="flex flex-col lg:flex-row-reverse justify-center align-center text-white text-center">
-      {/* <img src={heroImg} alt='nust-hostel-img' className='opacity-[0.05] absolute top-[50vh] left-[50vw] translate-x-[-50%] translate-y-[-50%] select-none' /> */}
-      <div className="w-[70%] pl-40 animate-pulse lg:w-[30%] lg:p-0">
-        <HeroSVG />
-      </div>
-      <div className="md:pt-[8%]">
-        <h1 className="font-bold text-6xl">
+    <main className="flex flex-col-reverse lg:flex-row justify-center items-center text-white text-center px-6 lg:px-20 md:pt-10">
+      {/* Text & Buttons */}
+      <div className="w-full max-w-2xl md:pt-10">
+        <h1 className="font-bold text-4xl md:text-4xl lg:text-5xl">
           Hostel <span className="text-blue-500">Management</span> System
         </h1>
-        <p className="py-10 text-2xl">  
+        <p className="py-6 text-lg md:text-xl">
           One Solution For All Of The Hostel&apos;s Needs
         </p>
-        <div className="py-20">
+        <div className="py-10">
           <Link
             to="/auth/login"
-            className="bg-blue-500 py-3 px-40 hover:bg-blue-700 transition rounded text-2xl"
+            className="bg-blue-500 py-3 px-16 md:px-24 lg:px-40 hover:bg-blue-700 transition rounded text-xl md:text-2xl"
           >
             Login
           </Link>
           <p className="mt-6 mb-3">OR</p>
           <Link
             to="/auth/request"
-            className="text-xl hover:underline hover:text-blue-500"
+            className="text-lg md:text-xl hover:underline hover:text-blue-500"
           >
             Request Registration
           </Link>
         </div>
       </div>
+      {/* SVG Illustration */}
+      <div className="w-full max-w-xs md:max-w-md lg:max-w-lg animate-pulse">
+        <HeroSVG />
+      </div>
     </main>
   );
 }
+
 export { HeroSection };

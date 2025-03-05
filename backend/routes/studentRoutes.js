@@ -2,7 +2,20 @@ const express = require('express');
 const router = express.Router();
 const { check } = require('express-validator');
 const { registerStudent, getStudent, getAllStudents, updateStudent, deleteStudent, csvStudent } = require('../controllers/studentController');
+const { Student } = require('../models/Student');
 
+// routes/studentRoutes.js
+// Add the following route to fetch all student
+router.get("/", async (req, res) => {
+    console.log("GET /api/student called"); // Debug log
+    try {
+      const students = await Student.find();
+      res.json(students);
+    } catch (error) {
+      console.error("Error fetching students:", error.message);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  });
 
 // @route  POST api/student/register-student
 // @desc   Register student

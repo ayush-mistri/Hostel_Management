@@ -2,6 +2,20 @@ const express = require('express');
 const { check } = require('express-validator');
 const { registerAdmin, updateAdmin, getAdmin, getHostel, deleteAdmin } = require('../controllers/adminController');
 const router = express.Router();
+const Admin = require('../models/Admin'); // Import the correct model
+
+// Route to fetch all admins
+router.get("/", async (req, res) => {
+    console.log("GET /api/admin called"); // Debug log
+
+    try {
+        const admins = await Admin.find().select('-password'); // Fetch all admins (excluding passwords)
+        res.json({ success: true, admins });
+    } catch (error) {
+        console.error("Error fetching admins:", error.message);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
 // @route  POST api/admin/register-admin
 // @desc   Register admin

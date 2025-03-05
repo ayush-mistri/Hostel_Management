@@ -1,45 +1,44 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 
 Sidebar.propTypes = {
-  links: PropTypes.shape({
-    text: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-    for: PropTypes.string.isRequired,
-    svg: PropTypes.element.isRequired,
-  }).isRequired,
+  links: PropTypes.arrayOf(
+    PropTypes.shape({
+      text: PropTypes.string.isRequired,
+      url: PropTypes.string.isRequired,
+      for: PropTypes.string.isRequired,
+      svg: PropTypes.element.isRequired,
+    })
+  ).isRequired,
 };
 
 function Sidebar({ links }) {
-  const navigate = useNavigate();
-  let logout = () => {
-    localStorage.removeItem("student");
-    localStorage.removeItem("token");
-    navigate("/");
-  };
-  const [isOpen, setIsOpen] = useState(true);
   const location = useLocation();
+  const [isOpen, setIsOpen] = useState(window.innerWidth >= 768);
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prev) => !prev);
   };
 
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const setWindowDimensions = () => {
-    setWindowWidth(window.innerWidth);
-    if (window.innerWidth >= 768) {
-      setIsOpen(true);
-    }
-  };
   useEffect(() => {
-    window.addEventListener("resize", setWindowDimensions);
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsOpen(true);
+      } else {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
     <div>
+      {/* Toggle Button for Mobile */}
       <button
-        className={`fixed flex gap-2 md:hidden z-50 top-[6rem] left-20 md:left-20 ml-10 bg-black p-1 w-50 h-50 rounded-full shadow-lg text-white transition-transform duration-300 ease-in-out transform ${
+        className={`fixed flex gap-2 md:hidden z-50 top-[1rem] left-20 md:left-20 ml-5 bg-black p-1 w-50 h-50 rounded-full shadow-lg text-white transition-transform duration-300 ease-in-out transform ${
           isOpen ? "translate-x-20" : "-translate-x-20"
         }`}
         onClick={toggleMenu}
@@ -70,14 +69,14 @@ function Sidebar({ links }) {
         </svg>
       </button>
 
-      {/* remove the bg color from sidemenu in comman dashboard --> bg-black*/}
+      {/* Sidebar */}
       <div
         className={`p-4 flex flex-col justify-between h-screen w-screen absolute md:static bg-black sm:w-64 text-white transition-transform duration-300 ease-in-out z-40 transform ${
           isOpen ? "translate-x-0" : "absolute -translate-x-full"
         }`}
       >
         <div
-          to={`/${links[0].for}-dashboard`}
+          to={`/${links[0]?.for}-dashboard`}
           className="w-full flex gap-2 justify-center text-white font-bold rounded-xl text-xl shadow-lg bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 absolute right-3"
         >
           <svg
@@ -96,10 +95,9 @@ function Sidebar({ links }) {
           </svg>{" "}
           <span className="md:hidden lg:inline">Dashboard</span>
         </div>
-        {/* i am remove the link tag and put the div tag from dashboard */}
 
+        {/* Sidebar Links */}
         <div className="absolute top-20 my-10 px-4 flex flex-col space-y-5 text-1xl text-white">
-          {/*eslint-disable-next-line react/prop-types*/}
           {links.map((link) => (
             <Link
               to={link.url}
@@ -115,35 +113,9 @@ function Sidebar({ links }) {
             </Link>
           ))}
         </div>
-        
       </div>
     </div>
   );
 }
 
 export { Sidebar };
-
-
-{/* <div className="p-4">
-          <button
-            onClick={logout}
-            type="submit"
-            className="w-full flex gap-2 justify-center text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
-              />
-            </svg>
-            Log Out
-          </button>
-        </div> */}

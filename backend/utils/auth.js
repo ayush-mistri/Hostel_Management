@@ -6,10 +6,10 @@ dotenv.config();
  * Generate a JWT token
  * @param {String} userId - The user ID to include in the token
  * @param {Boolean} isAdmin - Admin status of the user
- * @param {String} [expiresIn='1h'] - Token expiration time (optional)
+ * @param {String} [expiresIn='7d'] - Token expiration time (optional)
  * @returns {String} - Signed JWT token
  */
-exports.generateToken = (userId, isAdmin, expiresIn = '1h') => {
+exports.generateToken = (userId, isAdmin, expiresIn = '7d') => {
   const payload = { userId, isAdmin };
   return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
 };

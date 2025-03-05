@@ -3,6 +3,7 @@ const router = express.Router();
 const { check } = require('express-validator');
 const { registerComplaint, getbyhostel, getbystudent, resolve } = require('../controllers/complaintController');
 
+router.get("/", getbyhostel);
 // @route   Register api/compalint/register
 // @desc    Register complaint
 // @access  Public

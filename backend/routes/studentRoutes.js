@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { check } = require('express-validator');
 const { registerStudent, getStudent, getAllStudents, updateStudent, deleteStudent, csvStudent } = require('../controllers/studentController');
-const { Student } = require('../models/Student');
+const Student = require('../models/Student');
 
 // routes/studentRoutes.js
 // Add the following route to fetch all student

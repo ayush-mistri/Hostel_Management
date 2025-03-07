@@ -9,7 +9,7 @@ function StudentAnnouncements() {
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/announcement");
+        const response = await fetch("https://hostel-management-ofhb.vercel.app/api/announcement");
         const data = await response.json();
 
         if (data.success) {

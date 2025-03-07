@@ -9,7 +9,7 @@ export default function RequestAcc() {
       cms_id: inputCms,
     };
 
-    fetch("http://localhost:3000/api/request/register", {
+    fetch("https://hostel-management-ofhb.vercel.app/api/request/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -4,7 +4,7 @@ import { Doughnut } from "react-chartjs-2";
 function Attendance() {
   const getAttendance = async () => {
       let student = JSON.parse(localStorage.getItem("student"));
-      const res = await fetch("http://localhost:3000/api/attendance/get", {
+      const res = await fetch("https://hostel-management-ofhb.vercel.app/api/attendance/get", {
         method: "POST",
         headers:{
           "Content-Type": "application/json",

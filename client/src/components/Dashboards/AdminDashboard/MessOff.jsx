@@ -9,7 +9,7 @@ function MessOff() {
     setProgress(30);
     const hostel = JSON.parse(localStorage.getItem("hostel"));
     console.log(hostel);
-    const res = await fetch("http://localhost:3000/api/messoff/list", {
+    const res = await fetch("https://hostel-management-ofhb.vercel.app/api/messoff/list", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -45,7 +45,7 @@ function MessOff() {
   };
 
   const updateRequest = async (id, status) => {
-    const res = await fetch("http://localhost:3000/api/messoff/update", {
+    const res = await fetch("https://hostel-management-ofhb.vercel.app/api/messoff/update", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -29,7 +29,7 @@ function Home() {
   // Fetch mess requests
   const getRequests = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/messoff/list", {
+      const res = await fetch("https://hostel-management-ofhb.vercel.app/api/messoff/list", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -56,7 +56,7 @@ function Home() {
   // Fetch suggestions count
   const fetchSuggestionsCount = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/suggestion/hostel", {
+      const res = await fetch("https://hostel-management-ofhb.vercel.app/api/suggestion/hostel", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -78,7 +78,7 @@ function Home() {
   // Fetch complaints count
   const fetchComplaintsCount = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/complaint/hostel", {
+      const res = await fetch("https://hostel-management-ofhb.vercel.app/api/complaint/hostel", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -102,7 +102,7 @@ function Home() {
   // Fetch total mess requests count
   const fetchTotalMessRequestsCount = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/messoff/total", {
+      const res = await fetch("https://hostel-management-ofhb.vercel.app/api/messoff/total", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

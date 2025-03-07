@@ -65,7 +65,7 @@ function StudentProfilePage() {
     if (profilePic) formData.append("profilePic", profilePic);
 
     let result = await fetch(
-      "http://localhost:3000/api/student/update-profile",
+      "https://hostel-management-ofhb.vercel.app/api/student/update-profile",
       {
         method: "POST",
         body: formData,

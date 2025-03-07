@@ -40,7 +40,7 @@ const fetchRequestsList = async () => {
   if (student) {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3000/api/Messoff/count", {
+      const response = await fetch("https://hostel-management-ofhb.vercel.app/api/Messoff/count", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -86,7 +86,7 @@ useEffect(() => {
     };
 
     try {
-      const response = await fetch("http://localhost:3000/api/Messoff/request", {
+      const response = await fetch("https://hostel-management-ofhb.vercel.app/api/Messoff/request", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

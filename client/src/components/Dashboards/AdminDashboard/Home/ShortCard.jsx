@@ -11,7 +11,7 @@ function ShortCard({ number, title, path }) {
   return (
     <Link
       to={path || "#"}
-      className="py-5 w-full text-white flex flex-col bg-secondary gap-4 items-center rounded-xl shadow-custom-black md:max-w-[330px] cursor-pointer"
+      className="py-5 w-full text-white flex flex-col bg-secondary gap-4 items-center rounded-xl shadow-custom-black md:max-w-[330px] cursor-pointer hover:bg-gray-700"
     >
       {" "}
       {/* Wrap the card in Link */}

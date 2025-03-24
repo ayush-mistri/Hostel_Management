@@ -7,13 +7,13 @@ function Settings() {
   const changePassword = async (e) => {
     e.preventDefault();
     const user = JSON.parse(localStorage.getItem("admin"));
-    
+
     const data = {
       email: user.email,
       password: oldPass,
       newPassword: pass,
     };
-    
+
     let result = await fetch("https://hostel-management-ofhb.vercel.app/api/auth/change-password", {
       method: "POST",
       headers: {
@@ -61,24 +61,27 @@ function Settings() {
   }
 
   return (
-    <div className="w-full h-screen pt-10 flex flex-col items-center justify-center">
-      <h1 className="text-white font-bold text-5xl mb-10 text-center">Settings</h1>
-      <form method="POST" onSubmit={changePassword} >
-        <div className="w-96 flex flex-col justify-between gap-4 bg-secondary p-8 rounded-lg shadow-custom-black">
-          <h2 className="text-3xl text-white font-bold mb-5">
+    <div className="flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
+      <h1 className="text-white font-bold text-4xl sm:text-5xl mb-8 text-center">
+        Settings
+      </h1>
+      <form method="POST" onSubmit={changePassword} className="w-full max-w-md">
+        <div className="flex flex-col gap-4 bg-secondary p-6 sm:p-8 rounded-lg shadow-custom-black">
+          <h2 className="text-2xl sm:text-3xl text-white font-bold mb-4 sm:mb-5">
             Change Password
           </h2>
           <Input field={chngOldPassField} />
           <Input field={chngPassField} />
           <button
             type="submit"
-            className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 mt-5 text-center"
+            className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 mt-4"
           >
             Change Password
           </button>
         </div>
       </form>
     </div>
+
   );
 }
 

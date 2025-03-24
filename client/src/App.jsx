@@ -10,7 +10,8 @@ import RequestAcc from "./components/LandingSite/AuthPage/Request";
 import AdminSignIn from "./components/LandingSite/AuthPage/AdminSignIn";
 import Index from "./components/Dashboards/StudentDashboard/Index";
 import Home from "./components/Dashboards/StudentDashboard/Home";
-import Mess from "./components/Dashboards/StudentDashboard/Mess";
+import StudentLeave from "./components/Dashboards/StudentDashboard/Leave";
+import MessDetails from "./components/Dashboards/StudentDashboard/MessDetails";
 import Attendance from "./components/Dashboards/StudentDashboard/Attendance";
 import Invoices from "./components/Dashboards/StudentDashboard/Invoices";
 import Suggestions from "./components/Dashboards/StudentDashboard/Suggestions";
@@ -27,7 +28,8 @@ import AdminInvoices from './components/Dashboards/AdminDashboard/Invoices';
 import AdminSuggestions from './components/Dashboards/AdminDashboard/Suggestions';
 import AdminSettings from './components/Dashboards/AdminDashboard/Settings';
 import AllStudents from "./components/Dashboards/AdminDashboard/AllStudents";
-import AdminMess from "./components/Dashboards/AdminDashboard/MessOff";
+import AdminLeave from "./components/Dashboards/AdminDashboard/AdminLeave";
+import AdminMessDetails from "./components/Dashboards/AdminDashboard/MessDetails";
 import AdminProfilepage from "./components/Dashboards/AdminDashboard/Profilepage";
 import AdminAnnouncement from './components/Dashboards/AdminDashboard/Announcement';
 import NotFound from "./components/NotFound"; // Create a NotFound component
@@ -52,12 +54,13 @@ function App() {
         {/* Student Dashboard Routes */}
         <Route path="/student-dashboard" element={<Index />}>
           <Route index element={<Home />} />
-          <Route path="mess" element={<Mess />} />
+          <Route path="leave" element={<StudentLeave />} />
           <Route path="attendance" element={<Attendance />} />
           <Route path="complaints" element={<Complaints />} />
           <Route path="announcement" element={<Announcement />} />
           <Route path="suggestions" element={<Suggestions />} />
-          <Route path="invoices" element={<Invoices />} />         
+          <Route path="invoices" element={<Invoices />} />       
+          <Route path="messdetails" element={<MessDetails />} />  
           <Route path="profile" element={<Profilepage />} />
           <Route path="settings" element={<Settings />} />
         </Route>
@@ -73,8 +76,9 @@ function App() {
           <Route path="announcement" element={<AdminAnnouncement />} />
           <Route path="settings" element={<AdminSettings />} />
           <Route path="all-students" element={<AllStudents />} />
+          <Route path="adminmessdetails" element={<AdminMessDetails />} />
           <Route path="profile" element={<AdminProfilepage />} />
-          <Route path="mess" element={<AdminMess />} />
+          <Route path="leave" element={<AdminLeave />} />
         </Route>
 
         {/* Catch-all route for 404 */}

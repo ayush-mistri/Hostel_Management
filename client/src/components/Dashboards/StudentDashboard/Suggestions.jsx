@@ -25,6 +25,8 @@ function Suggestions() {
         closeOnClick: true,
         draggable: true,
         });
+        setTitle("");
+    setDesc("");
     } else {
       toast.error("Suggestion registration failed", {
         position: "top-right",
@@ -56,9 +58,10 @@ function Suggestions() {
     value: title,
     onChange: titleChange,
   };
+  
 
   return (
-    <div className="w-full h-screen flex flex-col gap-10 items-center bg-primsary justify-center max-h-screen overflow-y-auto">
+    <div className="md:w-full h-screen flex flex-col gap-10 items-center bg-primsary justify-center md:p-0 px-10 max-h-screen overflow-y-auto lg:p-0">
       <h1 className="text-white font-bold text-5xl mt-5">Suggestions</h1>
       <form
         method="POST"

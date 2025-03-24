@@ -52,7 +52,7 @@ const List = () => {
   }, [invoiceList.length]);
 
   return (
-    <div className="w-full max-w-md p-4 rounded-lg shadow-custom-black sm:p-8 bg-secondary drop-shadow-xl overflow-y-auto max-h-70">
+    <div className="w-full w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3 p-4 rounded-lg shadow-custom-black p-6 sm:p-8 bg-secondary drop-shadow-xl overflow-y-auto max-h-70">
       <div className="flex items-center justify-between mb-4">
         <h5 className="text-xl font-bold leading-none text-white">
           Unpaid Invoices
@@ -153,15 +153,15 @@ function Home() {
   const [daysOff, setDaysOff] = useState(0); //!Fetch from database
 
   return (
-    <div className="w-full h-screen flex items-center justify-center flex-col gap-5 max-h-screen overflow-y-auto pt-64 lg:pt-0 md:pt-64 sm:pt-96">
-      <h1 className="p-3 text-white font-bold text-5xl text-center">
+    <div className="w-full p-5 h-screen flex items-center justify-center flex-col gap-5 max-h-screen overflow-y-auto pt-64 lg:pt-0">
+      <h1 className="p-3 text-white font-bold text-4xl md:text-5xl text-center pt-5 md:pt-10 lg:pt-0">
         Welcome <span className="text-blue-500">{student.name}!</span>
       </h1>
-      <div className="flex gap-5 w-full justify-center flex-wrap">
+      <div className="flex gap-5 md:w-full justify-center flex-wrap">
         <List />
         <div className="flex flex-col items-center bg-secondary rounded-xl shadow-custom-black p-5">
           <span className="text-white text-xl">Attendance</span>
-          <Doughnut
+          {/* <Doughnut
             datasetIdKey="id"
             data={{
               labels,
@@ -176,7 +176,7 @@ function Home() {
                 },
               ],
             }}
-          />
+          /> */}
         </div>
       </div>
     </div>

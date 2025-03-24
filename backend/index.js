@@ -14,7 +14,8 @@ app.use(cors({
 }));
 
 
-app.use(express.json({ extended: false }));
+app.use(express.json({ limit: "10mb" })); 
+app.use(express.urlencoded({ limit: "10mb", extended: true })); 
 
 app.get("/", (req, res) => {
   res.send("Backend is running!");
@@ -25,11 +26,12 @@ app.use('/api/student', require('./routes/studentRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/complaint', require('./routes/complaintRoutes'));
 app.use('/api/invoice', require('./routes/invoiceRoutes'));
-app.use('/api/messoff', require('./routes/messoffRoutes'));
+app.use('/api/leave', require('./routes/leaveRoutes'));
 app.use('/api/request', require('./routes/requestRoutes'));
 app.use('/api/attendance', require('./routes/attendanceRoutes'));
 app.use('/api/suggestion', require('./routes/suggestionRoutes'));
 app.use('/api/announcement', require('./routes/announcementRoutes'));
+app.use('/api/messdetail', require('./routes/messdetailsRoutes'));
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

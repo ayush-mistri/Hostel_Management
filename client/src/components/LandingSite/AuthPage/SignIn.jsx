@@ -113,7 +113,7 @@ export default function SignIn() {
             <Input field={password} />
             <span
               onClick={togglePasswordVisibility}
-              className="absolute right-3 bottom-1 transform -translate-y-1/2 cursor-pointer"
+              className="absolute right-3 bottom-2 md:bottom-1 transform -translate-y-1/2 cursor-pointer"
             >
               {showPassword ? <FaEyeSlash className="text-gray-400" /> : <FaEye className="text-gray-400" />}
             </span>

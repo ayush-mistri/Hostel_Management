@@ -13,7 +13,10 @@ function StudentAnnouncements() {
         const data = await response.json();
 
         if (data.success) {
-          setAnnouncements(data.announcements);
+          const sortedAnnouncements = data.announcements.sort(
+            (a, b) => new Date(b.date) - new Date(a.date)
+          );
+          setAnnouncements(sortedAnnouncements);
         } else {
           toast.error(data.message || "Failed to fetch announcements.", {
             position: "top-right",
@@ -36,38 +39,49 @@ function StudentAnnouncements() {
   }, []);
 
   return (
-    <div className="w-full h-screen flex flex-col gap-4 items-center justify-center">
-      <h1 className="text-white font-bold text-5xl">Announcements</h1>
+    <div className="w-full h-screen flex flex-col items-center p-4 pt-20 overflow-y-auto">
+      <h1 className="text-white font-bold text-3xl md:text-5xl mb-8">Announcements</h1>
+
       {loading ? (
-        <p className="text-white text-lg">Loading announcements...</p>
+        <p className="text-white text-lg mt-4">Loading announcements...</p>
       ) : announcements.length > 0 ? (
-        <div className="sm:w-[50%] w-full py-5 px-10 bg-secondary rounded-xl shadow-custom-black mt-6 max-h-96 overflow-auto">
-          <span className="text-white font-bold text-xl">Latest Announcements</span>
-          <ul role="list" className="divide-y divide-gray-700 text-white">
-            {announcements.map((announcement) => (
-              <li
-                className="my-2 py-3 sm:py-2 px-5 rounded hover:bg-highlight hover:scale-105 transition-all"
-                key={announcement._id}
-              >
-                <div className="flex items-center space-x-4">
-                  <div className="flex-1 min-w-0">
-                    <h2 className="text- font-medium truncate text-white">
-                      title : {announcement.title}
-                    </h2>
-                    <p className="text-sm truncate text-gray-400">
-                    description : {announcement.description}
-                    </p>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+        <div className="w-full h-auto max-w-4xl bg-secondary p-5 rounded-lg shadow-lg text-white">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-max border-collapse border border-gray-700 text-center">
+              <thead>
+                <tr className="bg-gray-800 text-xl">
+                  <th className="border border-gray-700 p-3">Title</th>
+                  <th className="border border-gray-700 p-3">Description</th>
+                  <th className="border border-gray-700 p-3">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {announcements.map((announcement) => (
+                  <tr key={announcement._id} className="bg-gray-900">
+                    <td className="px-6 py-4 border border-gray-700 text-center font-medium">
+                      {announcement.title}
+                    </td>
+                    <td className="px-6 py-4 border border-gray-700 text-center">
+                      {announcement.description}
+                    </td>
+                    <td className="px-6 py-4 border border-gray-700 text-center">
+                      <span className="text-yellow-400">
+                        {new Date(announcement.date).toLocaleDateString()}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       ) : (
-        <p className="text-white text-lg">No announcements available.</p>
+        <p className="text-white text-lg mt-4">No announcements available.</p>
       )}
+
       <ToastContainer position="top-right" autoClose={3000} theme="dark" />
     </div>
+
   );
 }
 

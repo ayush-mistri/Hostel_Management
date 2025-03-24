@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import { User, LogOut } from "lucide-react"; // Importing icons
 
 Topbar.propTypes = {
   name: PropTypes.string,
@@ -9,7 +10,9 @@ Topbar.propTypes = {
 
 function Topbar({ name, notifications }) {
   const navigate = useNavigate();
-  let logout = () => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const logout = () => {
     localStorage.removeItem("admin");
     localStorage.removeItem("hostel");
     localStorage.removeItem("student");
@@ -17,30 +20,35 @@ function Topbar({ name, notifications }) {
     navigate("/");
   };
 
-  const [date, setDate] = useState(new Date());
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
-  function refreshClock() {
-    setDate(new Date());
-  }
+  // Close dropdown when clicking outside
   useEffect(() => {
-    const timerId = setInterval(refreshClock, 1000);
-    return function cleanup() {
-      clearInterval(timerId);
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".profile-menu")) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
     };
   }, []);
 
   return (
     <div className="py-4 px-6 md:px-10 flex items-center justify-between text-white w-full bg-black shadow-custom-blue fixed top-0 left-0 right-0 z-50">
-      {/* Left Side Content - Hidden on Mobile */}
-      {/* <div className="mr-auto text-lg font-semibold invisible md:visible">
-        Hostel Management
-      </div> */}
       <div className="mr-auto text-xl font-semibold invisible md:visible">
-        {localStorage.getItem("admin") ? "Admin Dashboard" : ""}
-        {localStorage.getItem("student") ? "Student Dashboard" : ""}
+        {localStorage.getItem("admin")
+          ? "Admin Dashboard"
+          : localStorage.getItem("student")
+            ? "Student Dashboard"
+            : ""}
       </div>
 
-      {/* Right Side Content */}
+
       <div className="flex gap-4 items-center">
         <Link to="settings">
           <svg
@@ -61,33 +69,34 @@ function Topbar({ name, notifications }) {
         </Link>
 
         {/* Profile Dropdown */}
-        <div className="relative group cursor-pointer">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6 h-6 hover:text-blue-500"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-          </svg>
-          <div className="absolute bg-secondary -bottom-20 right-2 hidden group-hover:flex flex-col rounded-xl">
-            <Link to="profile" className="py-2 px-8 hover:bg-highlight hover:rounded-xl">
-              Profile
-            </Link>
-            <Link to="/" className="py-2 px-8 hover:bg-highlight hover:rounded-xl">
-              <span onClick={logout}>Logout</span>
-            </Link>
-          </div>
+        <div className="relative top-1 profile-menu">
+          <button onClick={toggleDropdown} className="focus:outline-none">
+            <User className="w-6 h-6 hover:text-blue-500" />
+          </button>
+
+          {isDropdownOpen && (
+            <div className="absolute bg-gray-800 top-8 right-0 flex flex-col rounded-xl shadow-lg w-32">
+              <Link
+                to="profile"
+                className="flex items-center gap-2 pt-2 pb-2 hover:bg-gray-700 hover:rounded-xl text-white px-4"
+                onClick={() => setIsDropdownOpen(false)}
+              >
+                <User className="w-5 h-5" /> Profile
+              </Link>
+              <button
+                onClick={() => {
+                  logout();
+                  setIsDropdownOpen(false);
+                }}
+                className="flex items-center gap-2 pb-3 pt-2 hover:bg-gray-700 hover:rounded-xl text-white px-4 w-full text-left"
+              >
+                <LogOut className="w-5 h-5" /> Logout
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
-
   );
 }
 

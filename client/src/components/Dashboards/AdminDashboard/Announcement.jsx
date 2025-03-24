@@ -73,38 +73,47 @@ function Announcement() {
   };
 
   return (
-    <div className="w-full h-screen flex flex-col gap-10 items-center justify-center overflow-y-auto">
-      <h1 className="text-white font-bold text-5xl mt-5">Create Announcement</h1>
-      <form
-        method="POST"
-        onSubmit={registerAnnouncement}
-        className="md:w-[30vw] w-full py-5 pb-7 px-10 bg-secondary rounded-lg shadow-lg flex flex-col gap-5"
+    <div className="w-full min-h-screen flex flex-col gap-8 items-center justify-center px-4 sm:px-6 lg:px-8 overflow-y-auto">
+  <h1 className="text-white font-bold text-3xl sm:text-4xl md:text-5xl mt-5 text-center">
+    Create Announcement
+  </h1>
+  
+  <form
+    method="POST"
+    onSubmit={registerAnnouncement}
+    className="w-full max-w-lg py-6 px-6 sm:px-10 bg-secondary rounded-lg shadow-custom-black flex flex-col gap-5"
+  >
+    <Input field={suggestionTitle} />
+    
+    <div>
+      <label
+        htmlFor="description"
+        className="block mb-2 text-sm font-medium text-white"
       >
-        <Input field={suggestionTitle} />
-        <div>
-          <label
-            htmlFor="description"
-            className="block mb-2 text-sm font-medium text-white"
-          >
-            Announcement description
-          </label>
-          <textarea
-            name="description"
-            placeholder="Description..."
-            className="border sm:text-sm rounded-lg w-full p-2.5 bg-highlight border-secondary placeholder-black text-white focus:ring-2 focus:ring-black outline-none"
-            onChange={descChange}
-            value={desc}
-          ></textarea>
-          <button
-            type="submit"
-            className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-800 text-lg rounded-lg px-5 py-2.5 mt-5 text-center"
-          >
-            Submit Announcement
-          </button>
-        </div>
-      </form>
-      <ToastContainer position="top-right" autoClose={3000} theme="dark" />
+        Announcement Description
+      </label>
+      
+      <textarea
+        name="description"
+        placeholder="Description..."
+        className="border sm:text-sm rounded-lg w-full p-3 bg-highlight border-secondary placeholder-black text-white focus:ring-2 focus:ring-black outline-none"
+        onChange={descChange}
+        value={desc}
+        rows="4"
+      ></textarea>
     </div>
+
+    <button
+      type="submit"
+      className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-800 text-lg rounded-lg px-5 py-2.5"
+    >
+      Submit Announcement
+    </button>
+  </form>
+
+  <ToastContainer position="top-right" autoClose={3000} theme="dark" />
+</div>
+
   );
 }
 

@@ -265,61 +265,62 @@ function Attendance() {
   };
 
   return (
-    <div className="w-full h-screen flex flex-col gap-3 items-center justify-center bg-primary overflow-auto max-h-screen">
+    <div className="w-full h-screen flex flex-col items-center p-4 pt-20 overflow-y-auto xl:justify-center">
       <LoadingBar
         color="#0000FF"
         progress={progress}
         onLoaderFinished={() => setProgress(0)}
       />
-      <h1 className="text-white font-bold text-5xl">Attendance</h1>
+      <h1 className="text-white font-bold text-5xl mb-3">Attendance</h1>
       <p className="text-white text-xl mb-8">Date: {date}</p>
 
-      {/* Room Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {currentRooms.map((roomNumber) => {
-          const students = groupedByRoom[roomNumber]; // Get students for the current room
-          return (
-            <RoomCard
-              key={roomNumber} // Unique key for each room card
-              roomNumber={roomNumber}
-              students={students}
-            />
-          );
-        })}
-      </div>
+      {/* Room Cards & Pagination Wrapper */}
+      <div className="flex flex-col items-center w-full">
+        {/* Room Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {currentRooms.map((roomNumber) => {
+            const students = groupedByRoom[roomNumber]; // Get students for the current room
+            return (
+              <RoomCard
+                key={roomNumber} // Unique key for each room card
+                roomNumber={roomNumber}
+                students={students}
+              />
+            );
+          })}
+        </div>
 
-      {/* Next/Previous Buttons */}
-      <div className="flex items-center gap-5 w-full justify-center fixed bottom-0 py-10">
-        {/* Previous Button */}
-        <button
-          onClick={handlePrevious}
-          className={`py-2 px-4 rounded ${
-            currentRoomIndex === 0
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-800 text-white"
-          }`}
-          disabled={currentRoomIndex === 0} // Disable if on the first page
-        >
-          Previous
-        </button>
+        {/* Next/Previous Buttons */}
+        <div className="flex items-center gap-5 w-full justify-center py-6 md:py-8">
+          {/* Previous Button */}
+          <button
+            onClick={handlePrevious}
+            className={`py-2 px-4 rounded ${currentRoomIndex === 0
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-800 text-white"
+              }`}
+            disabled={currentRoomIndex === 0} // Disable if on the first page
+          >
+            Previous
+          </button>
 
-        {/* Page Number Display */}
-        <span className="text-white font-bold">
-          Page {currentRoomIndex + 1} of {totalPages}
-        </span>
+          {/* Page Number Display */}
+          <span className="text-white font-bold">
+            Page {currentRoomIndex + 1} of {totalPages}
+          </span>
 
-        {/* Next Button */}
-        <button
-          onClick={handleNext}
-          className={`py-2 px-4 rounded ${
-            (currentRoomIndex + 1) * roomsPerPage >= totalRooms
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-800 text-white"
-          }`}
-          disabled={(currentRoomIndex + 1) * roomsPerPage >= totalRooms} // Disable if on the last page
-        >
-          Next
-        </button>
+          {/* Next Button */}
+          <button
+            onClick={handleNext}
+            className={`py-2 px-4 rounded ${(currentRoomIndex + 1) * roomsPerPage >= totalRooms
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-800 text-white"
+              }`}
+            disabled={(currentRoomIndex + 1) * roomsPerPage >= totalRooms} // Disable if on the last page
+          >
+            Next
+          </button>
+        </div>
       </div>
 
       <ToastContainer />
@@ -332,6 +333,7 @@ function Attendance() {
         />
       )}
     </div>
+
   );
 }
 

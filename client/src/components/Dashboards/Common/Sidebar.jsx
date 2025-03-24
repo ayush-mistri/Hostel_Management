@@ -66,7 +66,7 @@ function Sidebar({ links }) {
       {/* Sidebar */}
       <div
         className={`fixed md:static left-0 h-screen bg-black text-white w-64 p-6 transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-          } z-40 md:mt-5`}
+          } z-40`}
       >
         {/* Sidebar Links */}
         <div className="mt-20 space-y-4">

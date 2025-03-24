@@ -107,8 +107,8 @@ function AllStudents() {
   }, []);
 
   return (
-    <div className="w-full h-screen flex flex-col gap-6 items-center justify-center">
-      <h1 className="text-white font-bold text-5xl">All Students</h1>
+    <div className="w-full h-screen flex flex-col items-center p-4 pt-20 overflow-y-auto xl:justify-center">
+      <h1 className="text-white font-bold text-5xl mb-8">All Students</h1>
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -122,7 +122,7 @@ function AllStudents() {
       />
 
       {/* Room Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {Object.keys(roomGroups)
           .slice(currentPage * roomsPerPage, (currentPage + 1) * roomsPerPage)
           .map((roomNo) => {
@@ -152,13 +152,12 @@ function AllStudents() {
       </div>
 
       {/* Pagination Buttons (Stick to Bottom) */}
-      <div className="flex items-center gap-5 w-full justify-center fixed bottom-0 py-12">
+      <div className="flex items-center gap-5 w-full justify-center py-6 md:py-8">
         <button
-          className={`py-2 px-4 rounded ${
-            currentPage === 0
+          className={`py-2 px-4 rounded ${currentPage === 0
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-800 text-white"
-          }`}
+            }`}
           onClick={prevPage}
           disabled={currentPage === 0}
         >
@@ -171,11 +170,10 @@ function AllStudents() {
         </span>
 
         <button
-          className={`py-2 px-4 rounded ${
-            (currentPage + 1) * roomsPerPage >= Object.keys(roomGroups).length
+          className={`py-2 px-4 rounded ${(currentPage + 1) * roomsPerPage >= Object.keys(roomGroups).length
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-800 text-white"
-          }`}
+            }`}
           onClick={nextPage}
           disabled={
             (currentPage + 1) * roomsPerPage >= Object.keys(roomGroups).length
@@ -186,7 +184,7 @@ function AllStudents() {
       </div>
 
       {isModalOpen && selectedRoom && (
-        <div className="fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[100%] max-h-full flex items-center justify-center bg-black bg-opacity-75">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 p-4">
           <div className="relative w-full max-w-2xl max-h-full lg:translate-x-[17%] rounded-lg shadow bg-secondary p-7">
             <svg
               onClick={closeModal}
@@ -203,18 +201,17 @@ function AllStudents() {
                 d="M6 18L18 6M6 6l12 12"
               />
             </svg>
-            <h2 className="text-lg font-bold mb-4 text-white">
-              Room {selectedRoom}
-            </h2>
+            <h2 className="text-xl font-bold mb-4 text-white text-left">Room {selectedRoom}</h2>
+
 
             <ul role="list" className="divide-y divide-gray-700 text-white">
               {roomGroups[selectedRoom] &&
-              roomGroups[selectedRoom].length === 0 ? (
+                roomGroups[selectedRoom].length === 0 ? (
                 <li className="py-3 text-center">No Students Found</li>
               ) : (
                 roomGroups[selectedRoom]?.map((student) => (
                   <li
-                    className="my-2 py-3 px-5 rounded sm:py-2 hover:bg-highlight hover:scale-105 transition-all"
+                    className="py-3 px-5 rounded hover:bg-highlight transition-all"
                     key={student._id}
                   >
                     <div className="flex items-center space-x-4">

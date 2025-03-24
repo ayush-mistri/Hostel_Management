@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const MessOffSchema = new Schema({
+const LeaveSchema = new Schema({
     student:{
         type:Schema.Types.ObjectId,
         ref:'student'
@@ -12,11 +12,6 @@ const MessOffSchema = new Schema({
     },
     return_date:{
         type:Date,
-        required:true
-    },
-    status:{
-        type:String,
-        default:'pending'
     },
     request_date:{
         type:Date,
@@ -24,4 +19,4 @@ const MessOffSchema = new Schema({
     }
 })
 
-module.exports = MessOff = mongoose.model('messoff',MessOffSchema);
+module.exports = Leave = mongoose.model('messoff', LeaveSchema);

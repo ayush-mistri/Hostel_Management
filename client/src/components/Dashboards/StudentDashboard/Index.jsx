@@ -27,8 +27,8 @@ export default function Index() {
       ),
     },
     {
-      text: "Mess Off",
-      url: "/student-dashboard/mess",
+      text: "Mess Details",
+      url: "/student-dashboard/messdetails",
       svg: (
         <svg
           className="h-7 w-7"
@@ -39,9 +39,34 @@ export default function Index() {
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          {" "}
-          <path stroke="none" d="M0 0h24v24H0z" />{" "}
-          <path d="M3 19l15 -15l3 3l-6 6l2 2a14 14 0 0 1 -14 4" />
+          <path stroke="none" d="M0 0h24v24H0z" />
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <line x1="16" y1="3" x2="16" y2="7" />
+          <line x1="8" y1="3" x2="8" y2="7" />
+          <line x1="4" y1="11" x2="20" y2="11" />
+          <path d="M9 16l2 2l4 -4" />
+        </svg>
+      ),
+    },
+    {
+      text: "Leave",
+      url: "/student-dashboard/leave",
+      svg: (
+        <svg
+          className="h-7 w-7"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" />
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <line x1="16" y1="3" x2="16" y2="7" />
+          <line x1="8" y1="3" x2="8" y2="7" />
+          <line x1="4" y1="11" x2="20" y2="11" />
+          <path d="M9 16l2 2l4 -4" />
         </svg>
       ),
     },

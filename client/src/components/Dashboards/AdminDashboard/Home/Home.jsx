@@ -29,29 +29,36 @@ function Home() {
   // Fetch mess requests
   const getRequests = async () => {
     try {
-      const res = await fetch("https://hostel-management-ofhb.vercel.app/api/messoff/list", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ hostel: hostel._id }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        const formattedReqs = data.list.map((req) => ({
-          ...req,
-          id: req._id,
-          from: new Date(req.leaving_date).toDateString().slice(4, 10),
-          to: new Date(req.return_date).toDateString().slice(4, 10),
-          _id: req.student._id,
-        }));
-        setMessReqs(formattedReqs);
-        setTotalMessRequests(data.list.length);
-      }
+        const res = await fetch("https://hostel-management-ofhb.vercel.app/api/leave/list", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ hostel: hostel._id }),
+        });
+        const data = await res.json();
+        if (data.success) {
+            const formattedReqs = data.list.map((req) => ({
+                ...req,
+                id: req._id,
+                from: req.leaving_date ? new Date(req.leaving_date).toDateString().slice(4, 10) : "N/A",
+                to: req.return_date ? new Date(req.return_date).toDateString().slice(4, 10) : "Pending",
+                _id: req.student._id,
+            }));
+            setMessReqs(formattedReqs);
+
+            // Set counts
+            setTotalMessRequests(data.finalDifference-data.totalReturnedCount);
+            console.log("Total Leaving Count:", data.totalLeavingCount);
+            console.log("Total Returned Count (return_date NOT NULL):", data.totalReturnedCount);
+            console.log("Final Difference (Leaving - Returned):", data.finalDifference);
+        }
     } catch (error) {
-      console.error("Failed to fetch mess requests:", error);
+        console.error("Failed to fetch mess requests:", error);
     }
-  };
+};
+
+
 
   // Fetch suggestions count
   const fetchSuggestionsCount = async () => {
@@ -99,24 +106,30 @@ function Home() {
     }
   };
 
-  // Fetch total mess requests count
-  const fetchTotalMessRequestsCount = async () => {
-    try {
-      const res = await fetch("https://hostel-management-ofhb.vercel.app/api/messoff/total", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ hostelId: hostel._id }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setTotalMessRequests(data.count);
-      }
-    } catch (error) {
-      console.error("Failed to fetch total mess requests:", error);
-    }
-  };
+  // const fetchTotalMessRequestsCount = async () => {
+  //   try {
+  //     if (!allStudents.length) return; 
+  
+  //     let totalCount = 0;
+  //     for (const student of allStudents) {
+  //       const res = await fetch("https://hostel-management-ofhb.vercel.app/api/messoff/total", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ student: student._id }), // Corrected key
+  //       });
+  //       const data = await res.json();
+  //       if (data.success) {
+  //         totalCount += data.count;
+  //       }
+  //     }
+  //     setTotalMessRequests(totalCount);
+  //   } catch (error) {
+  //     console.error("Failed to fetch total mess requests:", error);
+  //   }
+  // };
+  
 
   // Fetch all data on component mount
   useEffect(() => {
@@ -124,11 +137,11 @@ function Home() {
     getRequests();
     fetchSuggestionsCount();
     fetchComplaintsCount();
-    fetchTotalMessRequestsCount();
+    // fetchTotalMessRequestsCount();
   }, []);
 
   return (
-    <div className="w-full h-screen flex flex-col gap-3 items-center justify-center max-h-screen overflow-x-hidden overflow-y-auto pt-[400px] sm:pt-96 md:pt-96 lg:pt-80 xl:pt-10">
+    <div className="w-full h-screen flex flex-col gap-3 items-center justify-start min-h-screen overflow-x-hidden overflow-y-auto px-4 pt-24 md:pt-20 xl:justify-center">
       <h1 className="text-white font-bold text-5xl text-center">
         Welcome <span className="text-blue-500">{admin.name}!</span>
       </h1>
@@ -150,7 +163,7 @@ function Home() {
           path="/admin-dashboard/suggestions"
         />
         <ShortCard
-          title="Pending Mess Requests"
+          title="Student on a Leave"
           number={totalMessRequests}
           path="/admin-dashboard/mess"
         />

@@ -6,6 +6,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function Settings() {
   const navigate = useNavigate();
+  const [pass, setPass] = useState("");
+  const [oldPass, setOldPass] = useState('');
+
   const changePassword = async (e) => {
     e.preventDefault();
     const user = JSON.parse(localStorage.getItem("student"));
@@ -40,45 +43,34 @@ function Settings() {
     }
   };
 
-
-  const [pass, setPass] = useState("");
-  const [oldPass, setOldPass] = useState('');
   const chngPassField = {
     name: "New Password",
     type: "password",
     placeholder: "New Password",
     req: true,
-    onChange: chngPass,
+    onChange: (e) => setPass(e.target.value),
   };
   const chngOldPassField = {
     name: "Old Password",
     type: "password",
     placeholder: "Old Password",
     req: true,
-    onChange: chngOldPass,
+    onChange: (e) => setOldPass(e.target.value),
   };
 
-  function chngPass(e) {
-    setPass(e.target.value);
-  }
-
-  function chngOldPass(e) {
-    setOldPass(e.target.value);
-  }
-
   return (
-    <div className="w-full h-screen pt-10 flex flex-col items-center justify-center">
-      <h1 className="text-white font-bold text-5xl mb-10 text-center">Settings</h1>
-      <form method="POST" onSubmit={changePassword} >
-        <div className="w-96 flex flex-col justify-between gap-4 bg-secondary p-8 rounded-lg shadow-custom-black">
-          <h2 className="text-3xl text-white font-bold mb-5">
+    <div className="w-full min-h-screen flex flex-col items-center justify-center px-4 py-10">
+      <h1 className="text-white font-bold text-4xl sm:text-5xl mb-10 text-center">Settings</h1>
+      <form method="POST" onSubmit={changePassword} className="w-full max-w-lg">
+        <div className="w-full flex flex-col justify-between gap-4 bg-secondary p-6 sm:p-8 rounded-lg shadow-custom-black">
+          <h2 className="text-2xl sm:text-3xl text-white font-bold mb-5">
             Change Password
           </h2>
           <Input field={chngOldPassField} />
           <Input field={chngPassField} />
           <button
             type="submit"
-            className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 mt-5 text-center"
+            className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-800 font-medium rounded-lg text-sm sm:text-base px-5 py-2.5 mt-5 text-center"
           >
             Change Password
           </button>

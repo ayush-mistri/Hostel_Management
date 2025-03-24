@@ -48,6 +48,48 @@ export default function Index() {
       ),
     },
     {
+      text: "Mess Details",
+      url: "/admin-dashboard/adminmessdetails",
+      svg: (
+        <svg
+          className="h-7 w-7"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          {" "}
+          <path stroke="none" d="M0 0h24v24H0z" />{" "}
+          <path d="M3 19l15 -15l3 3l-6 6l2 2a14 14 0 0 1 -14 4" />
+        </svg>
+      ),
+    },
+
+    {
+      text: "Leave",
+      url: "/admin-dashboard/leave",
+      svg: (
+        <svg
+          className="h-7 w-7"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" />
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <line x1="16" y1="3" x2="16" y2="7" />
+          <line x1="8" y1="3" x2="8" y2="7" />
+          <line x1="4" y1="11" x2="20" y2="11" />
+          <path d="M9 16l2 2l4 -4" />
+        </svg>
+      ),
+    },
+    {
       text: "Attendance",
       url: "/admin-dashboard/attendance",
       svg: (
@@ -67,45 +109,7 @@ export default function Index() {
         </svg>
       ),
     },
-    {
-      text: "Mess",
-      url: "/admin-dashboard/mess",
-      svg: (
-        <svg
-          className="h-7 w-7"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          fill="none"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {" "}
-          <path stroke="none" d="M0 0h24v24H0z" />{" "}
-          <path d="M3 19l15 -15l3 3l-6 6l2 2a14 14 0 0 1 -14 4" />
-        </svg>
-      ),
-    },
-    {
-      text: "Invoices",
-      url: "/admin-dashboard/invoices",
-      svg: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
-          />
-        </svg>
-      ),
-    },
+
     {
       text: "Complaints",
       url: "/admin-dashboard/complaints",
@@ -164,6 +168,26 @@ export default function Index() {
             strokeLinecap="round"
             strokeLinejoin="round"
             d="M3.5 9.75V14.25C3.5 15.4926 4.50736 16.5 5.75 16.5H7.25L13.5 20.25V3.75L7.25 7.5H5.75C4.50736 7.5 3.5 8.50736 3.5 9.75ZM16.5 8.25L20 7.5M16.5 11.25L20 10.5M16.5 14.25L20 13.5"
+          />
+        </svg>
+      ),
+    },
+    {
+      text: "Invoices",
+      url: "/admin-dashboard/invoices",
+      svg: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-6 h-6"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
           />
         </svg>
       ),

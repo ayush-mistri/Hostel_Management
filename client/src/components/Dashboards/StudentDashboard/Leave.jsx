@@ -17,7 +17,7 @@ function Leave() {
     if (student) {
       setLoading(true);
       try {
-        const response = await fetch("http://localhost:3000/api/leave/count", {
+        const response = await fetch("https://hostel-management-ofhb.vercel.app/api/leave/count", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ student: student._id }),
@@ -138,7 +138,7 @@ function Leave() {
     console.log("Sending Data:", requestData);
   
     try {
-      const response = await fetch("http://localhost:3000/api/leave/request", {
+      const response = await fetch("https://hostel-management-ofhb.vercel.app/api/leave/request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestData),

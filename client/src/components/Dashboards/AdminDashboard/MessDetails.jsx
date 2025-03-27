@@ -51,26 +51,42 @@ function MessDetails() {
     };
 
     const openCamera = async () => {
-        try {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-            }
-
-            const mediaStream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: cameraFacing }
-            });
-
-            setStream(mediaStream);
-            setIsCameraOpen(true);
-
-            if (videoRef.current) {
-                videoRef.current.srcObject = mediaStream;
-                videoRef.current.play();
-            }
-        } catch (error) {
-            toast.error("Error accessing camera.");
+    try {
+        if (stream) {
+            stream.getTracks().forEach((track) => track.stop());
         }
-    };
+
+        const constraints = {
+            video: {
+                facingMode: cameraFacing === "user" ? "user" : { exact: "environment" },
+            },
+        };
+
+        const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+
+        setStream(mediaStream);
+        setIsCameraOpen(true);
+
+        if (videoRef.current) {
+            videoRef.current.srcObject = mediaStream;
+            await videoRef.current.play();
+        }
+    } catch (error) {
+        console.error("Error accessing camera:", error);
+        toast.error("Error accessing camera.");
+    }
+};
+
+const switchCamera = async () => {
+    setCameraFacing((prev) => (prev === "user" ? "environment" : "user"));
+};
+
+// Reopen camera when `cameraFacing` changes
+useEffect(() => {
+    if (isCameraOpen) {
+        openCamera();
+    }
+}, [cameraFacing]);
 
     const captureImage = () => {
         if (!videoRef.current || !canvasRef.current) return;
@@ -92,17 +108,6 @@ function MessDetails() {
         }
         setIsCameraOpen(false);
     };
-
-    const switchCamera = () => {
-    setCameraFacing((prev) => (prev === "user" ? "environment" : "user"));
-};
-
-    useEffect(() => {
-    if (isCameraOpen) {
-        openCamera();
-    }
-}, [cameraFacing]);
-
 
     const retakeImage = () => {
         setImage(null);

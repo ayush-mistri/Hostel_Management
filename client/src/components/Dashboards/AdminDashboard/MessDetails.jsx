@@ -116,7 +116,7 @@ function MessDetails() {
         }
 
         setIsLoading(true);
-        const loadingToast = toast.loading("");
+        const loadingToast = toast.loading();
 
         const formData = {
             date: selectedDate,

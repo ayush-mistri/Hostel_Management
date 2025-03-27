@@ -126,7 +126,7 @@ function MessDetails() {
         };
 
         try {
-            const response = await fetch("http://localhost:3000/api/messdetail/update", {
+            const response = await fetch("https://hostel-management-ofhb.vercel.app/api/messdetail/update", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData)
@@ -209,7 +209,7 @@ function MessDetails() {
                         {!isCameraOpen && !image && <button onClick={openCamera} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Open Camera</button>}
                         {isCameraOpen && <button onClick={captureImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Capture Image</button>}
                         {image && <button onClick={retakeImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Retake Image</button>}
-                        {isCameraOpen && <button onClick={switchCamera} className="text-white rounded-lg transition text-3xl sm:text-4xl">🔄</button>}
+                        {isCameraOpen && <button onClick={switchCamera} className="px-5 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">Switch Camera</button>}
                     </div>
                 </div>
             </div>

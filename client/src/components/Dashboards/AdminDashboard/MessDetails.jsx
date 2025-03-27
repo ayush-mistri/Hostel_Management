@@ -276,11 +276,17 @@ function MessDetails() {
 
     const openCamera = async () => {
         try {
-            const mediaStream = await navigator.mediaDevices.getUserMedia({ 
-                video: { facingMode: cameraFacing } 
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+
+            const mediaStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: cameraFacing }
             });
+
             setStream(mediaStream);
             setIsCameraOpen(true);
+
             if (videoRef.current) {
                 videoRef.current.srcObject = mediaStream;
                 videoRef.current.play();
@@ -427,6 +433,7 @@ function MessDetails() {
                         {!isCameraOpen && !image && <button onClick={openCamera} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Open Camera</button>}
                         {isCameraOpen && <button onClick={captureImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Capture Image</button>}
                         {image && <button onClick={retakeImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Retake Image</button>}
+                        {isCameraOpen && <button onClick={switchCamera} className="px-5 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">Switch Camera</button>}
                     </div>
                 </div>
             </div>

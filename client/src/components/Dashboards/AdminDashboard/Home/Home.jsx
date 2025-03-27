@@ -141,7 +141,7 @@ function Home() {
   }, []);
 
   return (
-    <div className="w-full h-screen flex flex-col gap-3 items-center justify-start min-h-screen overflow-x-hidden overflow-y-auto px-4 pt-24 md:pt-20 xl:justify-center">
+    <div className="w-full h-screen flex flex-col gap-3 items-center justify-start min-h-screen overflow-x-hidden overflow-y-auto p-4 pt-24 md:pt-20 xl:justify-center">
       <h1 className="text-white font-bold text-5xl text-center">
         Welcome <span className="text-blue-500">{admin.name}!</span>
       </h1>

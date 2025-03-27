@@ -1,13 +1,8 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
+// https://vitejs.dev/config/
 export default defineConfig({
-  base: "./", // Ensures relative paths work
+  base: "./", // Fix relative path issues
   plugins: [react()],
-  build: {
-    outDir: "dist",
-  },
-  server: {
-    historyApiFallback: true, // Fixes reload issues in SPA
-  },
-});
+})

@@ -35,7 +35,7 @@ export default function SignIn() {
 
     if (result.success) {
       localStorage.setItem("token", result.data.token);
-      let student = await fetch("http://localhost:3000/api/student/get-student", {
+      let student = await fetch("https://hostel-management-ofhb.vercel.app/api/student/get-student", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -93,14 +93,16 @@ function MessDetails() {
         setIsCameraOpen(false);
     };
 
-    const switchCamera = async () => {
-        setCameraFacing((prev) => (prev === "user" ? "environment" : "user"));
-        if (stream) {
-            stream.getTracks().forEach(track => track.stop());
-        }
-        setIsCameraOpen(false);
+    const switchCamera = () => {
+    setCameraFacing((prev) => (prev === "user" ? "environment" : "user"));
+};
+
+    useEffect(() => {
+    if (isCameraOpen) {
         openCamera();
-    };
+    }
+}, [cameraFacing]);
+
 
     const retakeImage = () => {
         setImage(null);

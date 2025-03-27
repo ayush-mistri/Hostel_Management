@@ -73,6 +73,7 @@ function MessDetails() {
     };
 
     useEffect(() => {
+<<<<<<< HEAD
     setImage(null); // Ensure no previous image is set on reload
     openCamera(); 
 
@@ -82,6 +83,17 @@ function MessDetails() {
         }
     };
 }, []);
+=======
+        setImage(null); // Ensure no previous image is set on reload
+        openCamera();
+
+        return () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        };
+    }, []);
+>>>>>>> be66ba4 (all main changes done)
 
 
     const captureImage = () => {
@@ -105,6 +117,7 @@ function MessDetails() {
         setIsCameraOpen(false);
     };
 
+<<<<<<< HEAD
 const switchCamera = async () => {
     setCameraFacing((prev) => (prev === "user" ? "environment" : "user"));
 };
@@ -114,6 +127,17 @@ useEffect(() => {
         openCamera();
     }
 }, [cameraFacing]);
+=======
+    const switchCamera = async () => {
+        setCameraFacing((prev) => (prev === "user" ? "environment" : "user"));
+    };
+>>>>>>> be66ba4 (all main changes done)
+
+    useEffect(() => {
+        if (isCameraOpen) {
+            openCamera();
+        }
+    }, [cameraFacing]);
 
 
     const retakeImage = () => {
@@ -220,10 +244,17 @@ useEffect(() => {
                     <canvas ref={canvasRef} style={{ display: "none" }} />
 
                     <div className="flex gap-3 mt-4">
+<<<<<<< HEAD
     {isCameraOpen && <button onClick={captureImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Capture Image</button>}
     {image && !isCameraOpen && <button onClick={retakeImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Retake Image</button>}
     {isCameraOpen && <button onClick={switchCamera} className="px-5 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">Switch Camera</button>}
 </div>
+=======
+                        {isCameraOpen && <button onClick={captureImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Capture Image</button>}
+                        {image && !isCameraOpen && <button onClick={retakeImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Retake Image</button>}
+                        {isCameraOpen && <button onClick={switchCamera} className="px-5 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">Switch Camera</button>}
+                    </div>
+>>>>>>> be66ba4 (all main changes done)
 
                 </div>
             </div>

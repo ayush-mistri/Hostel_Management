@@ -8,7 +8,7 @@ function StudentMessDetails() {
     useEffect(() => {
         const fetchMessDetails = async () => {
             try {
-                const response = await fetch("http://localhost:3000/api/messdetail");
+                const response = await fetch("https://hostel-management-ofhb.vercel.app/api/messdetail");
                 const data = await response.json();
 
                 if (response.ok) {

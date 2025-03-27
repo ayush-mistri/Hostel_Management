@@ -72,6 +72,15 @@ function MessDetails() {
         }
     };
 
+    useEffect(() => {
+        openCamera();
+        return () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        };
+    }, []);
+
     const captureImage = () => {
         if (!videoRef.current || !canvasRef.current) return;
 
@@ -208,7 +217,6 @@ useEffect(() => {
                     <canvas ref={canvasRef} style={{ display: "none" }} />
 
                     <div className="flex gap-3 mt-4">
-                        {!isCameraOpen && !image && <button onClick={openCamera} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Open Camera</button>}
                         {isCameraOpen && <button onClick={captureImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Capture Image</button>}
                         {image && <button onClick={retakeImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Retake Image</button>}
                         {isCameraOpen && <button onClick={switchCamera} className="px-5 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">Switch Camera</button>}

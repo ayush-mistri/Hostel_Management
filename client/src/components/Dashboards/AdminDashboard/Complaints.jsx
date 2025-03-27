@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 function Complaints() {
   const getComplaints = async () => {
     const hostel = JSON.parse(localStorage.getItem("hostel"))._id;
-    const response = await fetch(`https://hostel-management-ofhb.vercel.app/api/complaint/hostel`, {
+    const response = await fetch(`http://localhost:3000/api/complaint/hostel`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -50,7 +50,7 @@ function Complaints() {
   const [allComplaints, setAllComplaints] = useState([]);
 
   const dismissComplaint = async (id) => {
-    const response = await fetch("https://hostel-management-ofhb.vercel.app/api/complaint/resolve/", {
+    const response = await fetch("http://localhost:3000/api/complaint/resolve/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id }),

@@ -36,7 +36,7 @@ function Complaints() {
       date: new Date().toISOString(), // ✅ Ensure new complaint has a date
     };
 
-    const res = await fetch("https://hostel-management-ofhb.vercel.app/api/complaint/register", {
+    const res = await fetch("http://localhost:3000/api/complaint/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -103,7 +103,7 @@ function Complaints() {
       const student = JSON.parse(localStorage.getItem("student"));
       const cmpln = { student: student._id };
 
-      const res = await fetch("https://hostel-management-ofhb.vercel.app/api/complaint/student", {
+      const res = await fetch("http://localhost:3000/api/complaint/student", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

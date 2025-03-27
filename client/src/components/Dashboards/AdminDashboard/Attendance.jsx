@@ -22,7 +22,7 @@ function Attendance() {
   const getALL = async () => {
     setProgress(30);
     const markedResponse = await fetch(
-      "https://hostel-management-ofhb.vercel.app/api/attendance/getHostelAttendance",
+      "http://localhost:3000/api/attendance/getHostelAttendance",
       {
         method: "POST",
         headers: {
@@ -86,7 +86,7 @@ function Attendance() {
   };
 
   const markAttendance = async (id, isPresent) => {
-    const response = await fetch(`https://hostel-management-ofhb.vercel.app/api/attendance/mark`, {
+    const response = await fetch(`http://localhost:3000/api/attendance/mark`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

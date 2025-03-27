@@ -19,7 +19,7 @@ function Settings() {
       newPassword: pass,
     };
     
-    let result = await fetch("https://hostel-management-ofhb.vercel.app/api/auth/change-password", {
+    let result = await fetch("http://localhost:3000/api/auth/change-password", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

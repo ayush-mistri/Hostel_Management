@@ -18,7 +18,7 @@ function Profilepage() {
     formData.append("email", email);
     if (profilePic) formData.append("profilePic", profilePic);
 
-    let result = await fetch("https://hostel-management-ofhb.vercel.app/api/user/update-profile", {
+    let result = await fetch("http://localhost:3000/api/user/update-profile", {
       method: "POST",
       body: formData, // Send formData including image
     });

@@ -9,6 +9,7 @@ function MessDetails() {
     const [image, setImage] = useState(null);
     const [isCameraOpen, setIsCameraOpen] = useState(false);
     const [stream, setStream] = useState(null);
+    const [cameraFacing, setCameraFacing] = useState("user"); // "user" (front) or "environment" (back)
     const [isLoading, setIsLoading] = useState(false);
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
@@ -45,21 +46,39 @@ function MessDetails() {
     };
 
     const captureImage = () => {
-        if (videoRef.current && canvasRef.current) {
-            const canvas = canvasRef.current;
-            const ctx = canvas.getContext("2d");
-            canvas.width = videoRef.current.videoWidth || 640;
-            canvas.height = videoRef.current.videoHeight || 480;
-            ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-            setImage(canvas.toDataURL("image/png"));
+        if (!videoRef.current || !canvasRef.current) return;
 
-            if (stream) {
-                stream.getTracks().forEach((track) => track.stop());
-                setStream(null);
-            }
-            setIsCameraOpen(false);
+        const video = videoRef.current;
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext("2d");
+
+        // Set canvas to video resolution (Full HD but slightly optimized)
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        // Ensure no artificial smoothing
+        ctx.imageSmoothingEnabled = false;
+
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        setImage(canvas.toDataURL("image/jpeg", 0.8));
+
+        if (stream) {
+            stream.getTracks().forEach((track) => track.stop());
+            setStream(null);
         }
+        setIsCameraOpen(false);
     };
+
+    const switchCamera = async () => {
+        setCameraFacing((prev) => (prev === "user" ? "environment" : "user"));
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+        setIsCameraOpen(false);
+        openCamera();
+    };
+
 
     const retakeImage = () => {
         setImage(null);
@@ -68,37 +87,33 @@ function MessDetails() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         if (!selectedDate || !selectedMeal || !image) {
             toast.error("Please fill all fields and capture an image!");
             return;
         }
-    
+
         setIsLoading(true);
-        const loadingToast = toast.loading("Submitting...", {
-            style: { 
-                color: "green", // Green text
-                border: "2px solid green" // Green border
-            }
-        });        
-    
+        const loadingToast = toast.loading({
+        });
+
         const formData = {
             date: selectedDate,
             meal: selectedMeal,
             time: currentTime,
             image: image
         };
-    
+
         try {
             const response = await fetch("https://hostel-management-ofhb.vercel.app/api/messdetail/update", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData)
             });
-    
+
             const data = await response.json();
             toast.dismiss(loadingToast); // Remove "Submitting..." toast
-    
+
             if (response.ok) {
                 toast.success("Data submitted successfully!");
             } else {
@@ -111,7 +126,7 @@ function MessDetails() {
             setIsLoading(false);
         }
     };
-    
+
 
     return (
         <div className="w-full h-screen flex flex-col items-center justify-start bg-primary p-6 overflow-y-auto pt-20">
@@ -162,9 +177,9 @@ function MessDetails() {
                 <div className="w-full h-[500px] p-6 border rounded-lg bg-secondary border-neutral-900 drop-shadow-xl overflow-hidden flex flex-col items-center justify-center">
                     <div className="relative w-full flex justify-center">
                         {!image ? (
-                            <video ref={videoRef} className="rounded-lg shadow-lg border border-gray-500 w-[600px] h-[380px] object-cover" autoPlay />
+                            <video ref={videoRef} className="rounded-lg shadow-lg border border-gray-500 w-[650px] h-[400px] object-cover" autoPlay />
                         ) : (
-                            <img src={image} alt="Captured" className="rounded-lg w-[600px] h-[380px] object-cover border-4 border-gray-500 shadow-lg" />
+                            <img src={image} alt="Captured" className="rounded-lg w-[650px] h-[400px] object-cover border-4 border-gray-500 shadow-lg" />
                         )}
                     </div>
 
@@ -177,9 +192,15 @@ function MessDetails() {
                             </button>
                         )}
                         {isCameraOpen && !image && (
-                            <button onClick={captureImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition text-sm md:text-lg">
-                                Capture Image
-                            </button>
+                            <>
+                                <button onClick={captureImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition text-sm md:text-lg">
+                                    Capture Image
+                                </button>
+                                <button onClick={switchCamera} className="relative bottom-1 text-white rounded-lg transition text-4xl md:text-5xl">
+                                    🔄
+                                </button>
+                            </>
+
                         )}
                         {image && (
                             <button onClick={retakeImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition text-sm md:text-lg">

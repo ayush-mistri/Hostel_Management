@@ -24,7 +24,7 @@ function Announcement() {
     }
 
     try {
-      const response = await fetch("https://hostel-management-ofhb.vercel.app/api/announcement/create", {
+      const response = await fetch("http://localhost:3000/api/announcement/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

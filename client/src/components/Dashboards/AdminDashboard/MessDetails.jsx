@@ -9,19 +9,38 @@ function MessDetails() {
     const [image, setImage] = useState(null);
     const [isCameraOpen, setIsCameraOpen] = useState(false);
     const [stream, setStream] = useState(null);
-    const [cameraFacing, setCameraFacing] = useState("user"); // "user" (front) or "environment" (back)
+    const [cameraFacing, setCameraFacing] = useState("user");
     const [isLoading, setIsLoading] = useState(false);
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
 
     useEffect(() => {
         const today = new Date().toISOString().split("T")[0];
-        setSelectedDate(today);
+        setSelectedDate(localStorage.getItem("selectedDate") || today);
+        setSelectedMeal(localStorage.getItem("selectedMeal") || "Breakfast");
+        setImage(localStorage.getItem("image") || null);
+
         const updateTime = () => setCurrentTime(formatTime(new Date()));
         updateTime();
         const interval = setInterval(updateTime, 60000);
         return () => clearInterval(interval);
     }, []);
+
+    useEffect(() => {
+        localStorage.setItem("selectedDate", selectedDate);
+    }, [selectedDate]);
+
+    useEffect(() => {
+        localStorage.setItem("selectedMeal", selectedMeal);
+    }, [selectedMeal]);
+
+    useEffect(() => {
+        if (image) {
+            localStorage.setItem("image", image);
+        } else {
+            localStorage.removeItem("image");
+        }
+    }, [image]);
 
     const formatTime = (date) => {
         let hours = date.getHours();
@@ -33,9 +52,17 @@ function MessDetails() {
 
     const openCamera = async () => {
         try {
-            const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+
+            const mediaStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: cameraFacing }
+            });
+
             setStream(mediaStream);
             setIsCameraOpen(true);
+
             if (videoRef.current) {
                 videoRef.current.srcObject = mediaStream;
                 videoRef.current.play();
@@ -52,13 +79,9 @@ function MessDetails() {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
 
-        // Set canvas to video resolution (Full HD but slightly optimized)
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
-
-        // Ensure no artificial smoothing
         ctx.imageSmoothingEnabled = false;
-
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
         setImage(canvas.toDataURL("image/jpeg", 0.8));
@@ -79,7 +102,6 @@ function MessDetails() {
         openCamera();
     };
 
-
     const retakeImage = () => {
         setImage(null);
         openCamera();
@@ -94,8 +116,7 @@ function MessDetails() {
         }
 
         setIsLoading(true);
-        const loadingToast = toast.loading({
-        });
+        const loadingToast = toast.loading("");
 
         const formData = {
             date: selectedDate,
@@ -105,14 +126,14 @@ function MessDetails() {
         };
 
         try {
-            const response = await fetch("https://hostel-management-ofhb.vercel.app/api/messdetail/update", {
+            const response = await fetch("http://localhost:3000/api/messdetail/update", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData)
             });
 
             const data = await response.json();
-            toast.dismiss(loadingToast); // Remove "Submitting..." toast
+            toast.dismiss(loadingToast);
 
             if (response.ok) {
                 toast.success("Data submitted successfully!");
@@ -127,10 +148,9 @@ function MessDetails() {
         }
     };
 
-
     return (
         <div className="w-full h-screen flex flex-col items-center justify-start bg-primary p-6 overflow-y-auto pt-20">
-            <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} />
+            <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} theme="dark" />
 
             <h1 className="text-white font-bold text-5xl mb-8 pt-3">Mess Details</h1>
 
@@ -186,36 +206,13 @@ function MessDetails() {
                     <canvas ref={canvasRef} style={{ display: "none" }} />
 
                     <div className="flex gap-3 mt-4">
-                        {!isCameraOpen && !image && (
-                            <button onClick={openCamera} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition text-sm md:text-lg">
-                                Open Camera
-                            </button>
-                        )}
-                        {isCameraOpen && !image && (
-                            <>
-                                <button onClick={captureImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition text-sm md:text-lg">
-                                    Capture Image
-                                </button>
-                                <button onClick={switchCamera} className="relative bottom-1 text-white rounded-lg transition text-4xl md:text-5xl">
-                                    🔄
-                                </button>
-                            </>
-
-                        )}
-                        {image && (
-                            <button onClick={retakeImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition text-sm md:text-lg">
-                                Retake Image
-                            </button>
-                        )}
+                        {!isCameraOpen && !image && <button onClick={openCamera} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Open Camera</button>}
+                        {isCameraOpen && <button onClick={captureImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Capture Image</button>}
+                        {image && <button onClick={retakeImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Retake Image</button>}
+                        {isCameraOpen && <button onClick={switchCamera} className="text-white rounded-lg transition text-3xl sm:text-4xl">🔄</button>}
                     </div>
                 </div>
             </div>
-            <ToastContainer
-                position="top-right"
-                autoClose={2000}
-                hideProgressBar={false}
-                theme="dark"
-            />
         </div>
     );
 }

@@ -74,6 +74,7 @@ function MessDetails() {
 
     useEffect(() => {
 <<<<<<< HEAD
+<<<<<<< HEAD
     setImage(null); // Ensure no previous image is set on reload
     openCamera(); 
 
@@ -84,6 +85,8 @@ function MessDetails() {
     };
 }, []);
 =======
+=======
+>>>>>>> be66ba466612207f874583eefe275fad9be4be3e
         setImage(null); // Ensure no previous image is set on reload
         openCamera();
 
@@ -93,7 +96,10 @@ function MessDetails() {
             }
         };
     }, []);
+<<<<<<< HEAD
 >>>>>>> be66ba4 (all main changes done)
+=======
+>>>>>>> be66ba466612207f874583eefe275fad9be4be3e
 
 
     const captureImage = () => {
@@ -132,6 +138,12 @@ useEffect(() => {
         setCameraFacing((prev) => (prev === "user" ? "environment" : "user"));
     };
 >>>>>>> be66ba4 (all main changes done)
+
+    useEffect(() => {
+        if (isCameraOpen) {
+            openCamera();
+        }
+    }, [cameraFacing]);
 
     useEffect(() => {
         if (isCameraOpen) {
@@ -245,16 +257,22 @@ useEffect(() => {
 
                     <div className="flex gap-3 mt-4">
 <<<<<<< HEAD
+<<<<<<< HEAD
     {isCameraOpen && <button onClick={captureImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Capture Image</button>}
     {image && !isCameraOpen && <button onClick={retakeImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Retake Image</button>}
     {isCameraOpen && <button onClick={switchCamera} className="px-5 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">Switch Camera</button>}
 </div>
 =======
+=======
+>>>>>>> be66ba466612207f874583eefe275fad9be4be3e
                         {isCameraOpen && <button onClick={captureImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Capture Image</button>}
                         {image && !isCameraOpen && <button onClick={retakeImage} className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Retake Image</button>}
                         {isCameraOpen && <button onClick={switchCamera} className="px-5 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">Switch Camera</button>}
                     </div>
+<<<<<<< HEAD
 >>>>>>> be66ba4 (all main changes done)
+=======
+>>>>>>> be66ba466612207f874583eefe275fad9be4be3e
 
                 </div>
             </div>
